@@ -1,0 +1,320 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #111;
+  color: #eee;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.screen {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+/* =========================
+   ROLE
+========================= */
+
+#role-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#role-screen h1 {
+  font-size: 64px;
+  margin: 0;
+}
+
+.subtitle {
+  letter-spacing: .4em;
+  margin-bottom: 60px;
+}
+
+.role-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.role-button {
+  width: 180px;
+  height: 180px;
+  border: 1px solid #555;
+  background: #222;
+  color: white;
+  font-size: 40px;
+}
+
+.role-button small {
+  display: block;
+  font-size: 12px;
+  margin-top: 10px;
+  opacity: .5;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.mode {
+  font-size: 11px;
+  letter-spacing: .2em;
+  opacity: .5;
+}
+
+
+/* =========================
+   PANELS
+========================= */
+
+.parent-layout {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+.panel {
+  background: #1b1b1b;
+  border: 1px solid #333;
+  padding: 20px;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+
+/* =========================
+   PLAYERS
+========================= */
+
+.player-button {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  padding: 15px;
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+}
+
+.player-button.selected {
+  border-color: white;
+}
+
+.player-name {
+  font-weight: bold;
+}
+
+.player-instrument-small {
+  opacity: .5;
+  font-size: 13px;
+}
+
+
+/* =========================
+   INSTRUCTIONS
+========================= */
+
+.instruction-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.instruction-grid button {
+  height: 70px;
+  background: #292929;
+  color: white;
+  border: 1px solid #555;
+  font-weight: bold;
+}
+
+.instruction-grid button:active {
+  transform: scale(.97);
+}
+
+
+/* =========================
+   SCORES
+========================= */
+
+.score-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 8px;
+
+  text-align: left;
+
+  background: #222;
+  color: white;
+
+  border: 1px solid #444;
+}
+
+.score-button.selected {
+  border-color: white;
+}
+
+label {
+  display: block;
+  margin: 12px 0;
+}
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+
+  margin-top: 6px;
+
+  padding: 10px;
+
+  background: #111;
+  color: white;
+
+  border: 1px solid #444;
+}
+
+textarea {
+  min-height: 120px;
+}
+
+
+/* =========================
+   CHILD
+========================= */
+
+.child-layout {
+  max-width: 800px;
+  margin: auto;
+}
+
+.player-card {
+  text-align: center;
+  padding: 30px;
+}
+
+.player-instrument {
+  font-size: 18px;
+  opacity: .6;
+}
+
+.instruction-display {
+  margin-top: 20px;
+
+  min-height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #181818;
+  border: 1px solid #444;
+
+  font-size: 64px;
+  font-weight: bold;
+}
+
+
+/* =========================
+   CHAT
+========================= */
+
+#chat-log,
+#child-chat-log {
+  height: 180px;
+
+  overflow-y: auto;
+
+  padding: 10px;
+
+  background: #111;
+
+  border: 1px solid #333;
+}
+
+.chat-message {
+  padding: 6px 0;
+  border-bottom: 1px solid #222;
+}
+
+.chat-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.chat-input input {
+  flex: 1;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .screen {
+    padding: 12px;
+  }
+
+  .parent-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .role-buttons {
+    width: 100%;
+  }
+
+  .role-button {
+    flex: 1;
+    height: 140px;
+  }
+
+  .instruction-display {
+    min-height: 180px;
+    font-size: 48px;
+  }
+}
