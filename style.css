@@ -18,7 +18,8 @@ body {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -212,10 +213,6 @@ header h1 {
   background: #333;
 }
 
-.player-delete-button {
-  color: #ccc;
-}
-
 .add-player-button {
   width: 100%;
 
@@ -230,8 +227,19 @@ header h1 {
   border: 1px dashed #555;
 }
 
-.add-player-button:hover {
-  background: #292929;
+
+/* =========================
+   SELECTED PLAYER
+========================= */
+
+.selected-player {
+  padding: 12px;
+
+  background: #111;
+
+  border: 1px solid #333;
+
+  font-weight: bold;
 }
 
 
@@ -264,6 +272,95 @@ header h1 {
 
 .instruction-grid button:active {
   transform: scale(.97);
+}
+
+
+/* =========================
+   SCALE
+========================= */
+
+.scale-panel {
+  position: relative;
+}
+
+.scale-preview {
+  margin-top: 15px;
+
+  padding: 15px;
+
+  background: #111;
+
+  border: 1px solid #333;
+}
+
+.scale-preview-name {
+  font-size: 20px;
+
+  font-weight: bold;
+
+  margin-bottom: 12px;
+}
+
+.scale-notes {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+.scale-notes span {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 38px;
+
+  padding: 8px 10px;
+
+  background: #222;
+
+  border: 1px solid #444;
+
+  font-weight: bold;
+}
+
+select {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 6px;
+
+  padding: 12px;
+
+  background: #111;
+
+  color: white;
+
+  border: 1px solid #444;
+}
+
+.scale-send-button {
+  width: 100%;
+
+  margin-top: 14px;
+
+  padding: 15px;
+
+  background: #eee;
+
+  color: #111;
+
+  border: none;
+
+  font-weight: bold;
+}
+
+.scale-send-button:active {
+  transform: scale(.98);
 }
 
 
@@ -334,18 +431,18 @@ textarea {
 .player-card {
   text-align: center;
 
-  padding: 30px;
+  padding: 30px 0;
 }
 
 .player-instrument {
-  font-size: 18px;
+  font-size: 20px;
 
   opacity: .6;
+
+  margin-bottom: 15px;
 }
 
 .instruction-display {
-  margin-top: 20px;
-
   min-height: 220px;
 
   display: flex;
@@ -359,6 +456,57 @@ textarea {
   border: 1px solid #444;
 
   font-size: 64px;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   CHILD SCALE
+========================= */
+
+.child-scale-panel {
+  margin-bottom: 16px;
+}
+
+.child-section-label {
+  font-size: 11px;
+
+  letter-spacing: .25em;
+
+  opacity: .5;
+
+  margin-bottom: 8px;
+}
+
+.child-scale-name {
+  font-size: 32px;
+
+  font-weight: bold;
+
+  margin-bottom: 18px;
+}
+
+.child-scale-notes {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.child-scale-notes span {
+  min-width: 48px;
+
+  padding: 12px;
+
+  text-align: center;
+
+  background: #222;
+
+  border: 1px solid #444;
+
+  font-size: 18px;
 
   font-weight: bold;
 }
@@ -448,6 +596,10 @@ textarea {
     padding: 0 8px;
 
     font-size: 13px;
+  }
+
+  .child-scale-name {
+    font-size: 26px;
   }
 
 }
