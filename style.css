@@ -2,7 +2,9 @@
   box-sizing: border-box;
 }
 
+
 body {
+
   margin: 0;
 
   background: #111;
@@ -14,39 +16,49 @@ body {
     BlinkMacSystemFont,
     "Helvetica Neue",
     sans-serif;
+
 }
+
 
 button,
 input,
 textarea,
 select {
+
   font: inherit;
+
 }
+
 
 button {
+
   cursor: pointer;
+
 }
 
-
-/* =========================
-   SCREEN
-========================= */
 
 .screen {
+
   min-height: 100vh;
+
   padding: 24px;
+
 }
 
-.screen.hidden {
+
+.hidden {
+
   display: none !important;
+
 }
 
 
-/* =========================
+/* =========================================================
    ROLE
-========================= */
+========================================================= */
 
 #role-screen {
+
   display: flex;
 
   flex-direction: column;
@@ -54,27 +66,41 @@ button {
   align-items: center;
 
   justify-content: center;
+
 }
 
+
 #role-screen h1 {
+
   font-size: 64px;
 
   margin: 0;
+
 }
 
+
 .subtitle {
+
   letter-spacing: .4em;
 
   margin-bottom: 60px;
+
+  opacity: .6;
+
 }
 
+
 .role-buttons {
+
   display: flex;
 
   gap: 20px;
+
 }
 
+
 .role-button {
+
   width: 180px;
 
   height: 180px;
@@ -86,9 +112,19 @@ button {
   color: white;
 
   font-size: 40px;
+
 }
 
+
+.role-button:hover {
+
+  background: #2a2a2a;
+
+}
+
+
 .role-button small {
+
   display: block;
 
   font-size: 12px;
@@ -96,14 +132,16 @@ button {
   margin-top: 10px;
 
   opacity: .5;
+
 }
 
 
-/* =========================
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 header {
+
   display: flex;
 
   justify-content: space-between;
@@ -111,68 +149,73 @@ header {
   align-items: center;
 
   margin-bottom: 25px;
+
 }
+
 
 header h1 {
+
   margin: 0;
+
 }
 
+
 .mode {
+
   font-size: 11px;
 
   letter-spacing: .2em;
 
   opacity: .5;
+
 }
 
 
-/* =========================
+/* =========================================================
    PANELS
-========================= */
+========================================================= */
 
 .parent-layout {
+
   display: grid;
 
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
   gap: 16px;
+
 }
 
+
 .panel {
+
   background: #1b1b1b;
 
   border: 1px solid #333;
 
   padding: 20px;
+
 }
+
 
 .panel h2 {
+
   margin-top: 0;
+
 }
 
 
-/* =========================
+/* =========================================================
    PLAYERS
-========================= */
-
-.player-item {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto
-    auto;
-
-  gap: 6px;
-
-  margin-bottom: 8px;
-}
+========================================================= */
 
 .player-button {
+
   width: 100%;
 
   text-align: left;
+
+  margin-bottom: 8px;
 
   padding: 15px;
 
@@ -181,73 +224,89 @@ header h1 {
   border: 1px solid #444;
 
   color: white;
+
 }
+
+
+.player-button:hover {
+
+  background: #292929;
+
+}
+
 
 .player-button.selected {
+
   border-color: white;
+
 }
+
 
 .player-name {
+
   font-weight: bold;
+
 }
 
+
 .player-instrument-small {
+
   opacity: .5;
 
   font-size: 13px;
+
 }
 
-.player-edit-button,
-.player-delete-button {
-  padding: 0 12px;
 
-  background: #222;
-
-  color: white;
-
-  border: 1px solid #444;
-}
-
-.player-edit-button:hover,
-.player-delete-button:hover {
-  background: #333;
-}
-
-.add-player-button {
-  width: 100%;
+.player-instruction-small {
 
   margin-top: 8px;
 
-  padding: 14px;
+  font-size: 12px;
 
-  background: #222;
+  opacity: .8;
 
-  color: white;
-
-  border: 1px dashed #555;
 }
 
 
-/* =========================
-   SELECTED PLAYER
-========================= */
+/* =========================================================
+   INSTRUCTION
+========================================================= */
 
-.selected-player {
-  padding: 12px;
+.selected-info {
+
+  padding: 10px;
+
+  border-bottom: 1px solid #333;
+
+}
+
+
+.current-instruction {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 100px;
+
+  margin-top: 15px;
 
   background: #111;
 
-  border: 1px solid #333;
+  border: 1px solid #444;
+
+  font-size: 32px;
 
   font-weight: bold;
+
 }
 
 
-/* =========================
-   INSTRUCTIONS
-========================= */
-
 .instruction-grid {
+
   display: grid;
 
   grid-template-columns:
@@ -256,9 +315,12 @@ header h1 {
   gap: 10px;
 
   margin-top: 20px;
+
 }
 
+
 .instruction-grid button {
+
   height: 70px;
 
   background: #292929;
@@ -268,107 +330,30 @@ header h1 {
   border: 1px solid #555;
 
   font-weight: bold;
+
 }
+
+
+.instruction-grid button:hover {
+
+  background: #333;
+
+}
+
 
 .instruction-grid button:active {
+
   transform: scale(.97);
+
 }
 
 
-/* =========================
-   SCALE
-========================= */
-
-.scale-panel {
-  position: relative;
-}
-
-.scale-preview {
-  margin-top: 15px;
-
-  padding: 15px;
-
-  background: #111;
-
-  border: 1px solid #333;
-}
-
-.scale-preview-name {
-  font-size: 20px;
-
-  font-weight: bold;
-
-  margin-bottom: 12px;
-}
-
-.scale-notes {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 6px;
-}
-
-.scale-notes span {
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  min-width: 38px;
-
-  padding: 8px 10px;
-
-  background: #222;
-
-  border: 1px solid #444;
-
-  font-weight: bold;
-}
-
-select {
-  display: block;
-
-  width: 100%;
-
-  margin-top: 6px;
-
-  padding: 12px;
-
-  background: #111;
-
-  color: white;
-
-  border: 1px solid #444;
-}
-
-.scale-send-button {
-  width: 100%;
-
-  margin-top: 14px;
-
-  padding: 15px;
-
-  background: #eee;
-
-  color: #111;
-
-  border: none;
-
-  font-weight: bold;
-}
-
-.scale-send-button:active {
-  transform: scale(.98);
-}
-
-
-/* =========================
-   SCORES
-========================= */
+/* =========================================================
+   SCORE
+========================================================= */
 
 .score-button {
+
   display: block;
 
   width: 100%;
@@ -384,20 +369,30 @@ select {
   color: white;
 
   border: 1px solid #444;
+
 }
+
 
 .score-button.selected {
+
   border-color: white;
+
 }
 
+
 label {
+
   display: block;
 
   margin: 12px 0;
+
 }
 
+
 input,
-textarea {
+textarea,
+select {
+
   display: block;
 
   width: 100%;
@@ -411,38 +406,166 @@ textarea {
   color: white;
 
   border: 1px solid #444;
+
 }
+
 
 textarea {
+
   min-height: 120px;
+
 }
 
 
-/* =========================
+/* =========================================================
+   SCALE
+========================================================= */
+
+.scale-selector {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 10px;
+
+}
+
+
+.scale-selector label:last-of-type {
+
+  grid-column: span 2;
+
+}
+
+
+.scale-send-button {
+
+  grid-column: span 2;
+
+  height: 55px;
+
+  background: #eee;
+
+  color: #111;
+
+  border: none;
+
+  font-weight: bold;
+
+}
+
+
+.scale-current {
+
+  margin-top: 20px;
+
+  padding: 20px;
+
+  background: #111;
+
+  border: 1px solid #333;
+
+  text-align: center;
+
+}
+
+
+.scale-current-label {
+
+  font-size: 11px;
+
+  letter-spacing: .2em;
+
+  opacity: .5;
+
+  margin-bottom: 10px;
+
+}
+
+
+.scale-name {
+
+  font-size: 28px;
+
+  font-weight: bold;
+
+}
+
+
+.scale-notes {
+
+  margin-top: 12px;
+
+  font-size: 18px;
+
+  letter-spacing: .08em;
+
+  word-spacing: 10px;
+
+}
+
+
+/* =========================================================
    CHILD
-========================= */
+========================================================= */
 
 .child-layout {
+
   max-width: 800px;
 
   margin: auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
 }
 
-.player-card {
-  text-align: center;
 
-  padding: 30px 0;
+.child-player-select {
+
+  font-size: 18px;
+
 }
 
-.player-instrument {
-  font-size: 20px;
+
+.child-player-name {
+
+  margin-top: 12px;
+
+  font-size: 14px;
 
   opacity: .6;
 
-  margin-bottom: 15px;
 }
 
+
+.player-card {
+
+  text-align: center;
+
+  padding: 30px;
+
+}
+
+
+.player-instrument {
+
+  font-size: 18px;
+
+  opacity: .6;
+
+}
+
+
 .instruction-display {
+
+  margin-top: 20px;
+
   min-height: 220px;
 
   display: flex;
@@ -458,72 +581,17 @@ textarea {
   font-size: 64px;
 
   font-weight: bold;
+
 }
 
 
-/* =========================
-   CHILD SCALE
-========================= */
-
-.child-scale-panel {
-  margin-bottom: 16px;
-}
-
-.child-section-label {
-  font-size: 11px;
-
-  letter-spacing: .25em;
-
-  opacity: .5;
-
-  margin-bottom: 8px;
-}
-
-.child-scale-name {
-  font-size: 32px;
-
-  font-weight: bold;
-
-  margin-bottom: 18px;
-}
-
-.child-scale-notes {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 8px;
-}
-
-.child-scale-notes span {
-  min-width: 48px;
-
-  padding: 12px;
-
-  text-align: center;
-
-  background: #222;
-
-  border: 1px solid #444;
-
-  font-size: 18px;
-
-  font-weight: bold;
-}
-
-.score-display {
-  white-space: pre-wrap;
-
-  line-height: 1.7;
-}
-
-
-/* =========================
+/* =========================================================
    CHAT
-========================= */
+========================================================= */
 
 #chat-log,
 #child-chat-log {
+
   height: 180px;
 
   overflow-y: auto;
@@ -533,73 +601,100 @@ textarea {
   background: #111;
 
   border: 1px solid #333;
+
 }
 
+
 .chat-message {
+
   padding: 6px 0;
 
   border-bottom: 1px solid #222;
+
 }
 
+
 .chat-input {
+
   display: flex;
 
   gap: 8px;
 
   margin-top: 8px;
+
 }
+
 
 .chat-input input {
+
   flex: 1;
+
 }
 
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 700px) {
 
   .screen {
+
     padding: 12px;
+
   }
+
 
   .parent-layout {
+
     grid-template-columns: 1fr;
+
   }
+
 
   .role-buttons {
+
     width: 100%;
+
   }
 
+
   .role-button {
+
     flex: 1;
 
     height: 140px;
+
   }
 
+
   .instruction-display {
+
     min-height: 180px;
 
     font-size: 48px;
+
   }
 
-  .player-item {
-    grid-template-columns:
-      minmax(0, 1fr)
-      auto
-      auto;
+
+  .scale-selector {
+
+    grid-template-columns: 1fr;
+
   }
 
-  .player-edit-button,
-  .player-delete-button {
-    padding: 0 8px;
 
-    font-size: 13px;
+  .scale-selector label:last-of-type {
+
+    grid-column: span 1;
+
   }
 
-  .child-scale-name {
-    font-size: 26px;
+
+  .scale-send-button {
+
+    grid-column: span 1;
+
   }
 
 }
