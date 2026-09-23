@@ -15,7 +15,7 @@
 <div id="app">
 
   <!-- =========================
-       TOP
+       ROLE
   ========================== -->
 
   <section id="role-screen" class="screen">
@@ -51,6 +51,7 @@
   <section id="parent-screen" class="screen hidden">
 
     <header>
+
       <div>
         <h1>野流 LIVE CONTROL</h1>
         <span class="mode">PARENT</span>
@@ -59,12 +60,16 @@
       <button onclick="backToRole()">
         戻る
       </button>
+
     </header>
 
 
     <main class="parent-layout">
 
-      <!-- PLAYERS -->
+
+      <!-- =========================
+           PLAYERS
+      ========================== -->
 
       <section class="panel">
 
@@ -72,10 +77,18 @@
 
         <div id="parent-players"></div>
 
+        <button
+          class="add-player-button"
+          onclick="addPlayer()">
+          ＋ 演奏者を追加
+        </button>
+
       </section>
 
 
-      <!-- CONTROL -->
+      <!-- =========================
+           CONTROL
+      ========================== -->
 
       <section class="panel">
 
@@ -116,7 +129,9 @@
       </section>
 
 
-      <!-- SCORE -->
+      <!-- =========================
+           SCORE
+      ========================== -->
 
       <section class="panel">
 
@@ -130,11 +145,13 @@
 
         <label>
           タイトル
+
           <input id="score-title">
         </label>
 
         <label>
           内容
+
           <textarea id="score-content"></textarea>
         </label>
 
@@ -145,7 +162,9 @@
       </section>
 
 
-      <!-- CHAT -->
+      <!-- =========================
+           CHAT
+      ========================== -->
 
       <section class="panel chat-panel">
 
@@ -196,8 +215,9 @@
 
       <section class="player-card">
 
-        <div class="player-instrument"
-             id="child-instrument">
+        <div
+          class="player-instrument"
+          id="child-instrument">
           —
         </div>
 
