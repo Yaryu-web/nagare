@@ -108,7 +108,9 @@
     <main class="parent-layout">
 
 
-      <!-- PLAYERS -->
+      <!-- =========================
+           PLAYERS
+      ========================== -->
 
       <section class="panel">
 
@@ -134,7 +136,9 @@
 
 
 
-      <!-- INSTRUCTION -->
+      <!-- =========================
+           INSTRUCTION
+      ========================== -->
 
       <section class="panel">
 
@@ -185,13 +189,21 @@
             FREE
           </button>
 
+          <button
+            class="instruction-all"
+            onclick="sendInstruction('ALL')">
+            全体へ
+          </button>
+
         </div>
 
       </section>
 
 
 
-      <!-- SCALE -->
+      <!-- =========================
+           SCALE
+      ========================== -->
 
       <section class="panel scale-panel">
 
@@ -227,11 +239,75 @@
 
         </button>
 
+
+        <!-- SCALE EDITOR -->
+
+        <div class="scale-editor">
+
+          <h3>
+            Favorite / Custom 編集
+          </h3>
+
+
+          <label>
+
+            名前
+
+            <input
+              id="scale-edit-name"
+              placeholder="例：C# Panta">
+
+          </label>
+
+
+          <label>
+
+            構成音
+
+            <input
+              id="scale-edit-notes"
+              placeholder="例：C#, D#, F#, G#, A#">
+
+          </label>
+
+
+          <div class="scale-editor-buttons">
+
+            <button
+              onclick="saveFavoriteScale()">
+
+              Favoriteに保存
+
+            </button>
+
+
+            <button
+              onclick="saveCustomScale()">
+
+              Customに保存
+
+            </button>
+
+          </div>
+
+
+          <button
+            class="danger-button"
+            onclick="deleteEditableScale()">
+
+            選択中のFavorite / Customを削除
+
+          </button>
+
+        </div>
+
       </section>
 
 
 
-      <!-- SCORE -->
+      <!-- =========================
+           SCORE
+      ========================== -->
 
       <section class="panel">
 
@@ -268,8 +344,7 @@
           内容
 
           <textarea
-            id="score-content">
-          </textarea>
+            id="score-content"></textarea>
 
         </label>
 
@@ -285,13 +360,15 @@
 
 
 
-      <!-- CHAT -->
+      <!-- =========================
+           CHAT / TIMELINE
+      ========================== -->
 
       <section
         class="panel chat-panel">
 
         <h2>
-          チャット
+          チャット / TIMELINE
         </h2>
 
 
@@ -364,7 +441,34 @@
     <main class="child-layout">
 
 
-      <!-- PLAYER -->
+      <!-- =========================
+           PLAYER SELECT
+      ========================== -->
+
+      <section class="panel child-player-select-panel">
+
+        <div class="child-section-label">
+          YOUR PART
+        </div>
+
+
+        <h2>
+          自分の演奏者を選択
+        </h2>
+
+
+        <div
+          id="child-player-selector"
+          class="child-player-selector">
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================
+           PLAYER / INSTRUCTION
+      ========================== -->
 
       <section
         class="player-card">
@@ -392,7 +496,29 @@
 
 
 
-      <!-- SCALE -->
+      <!-- =========================
+           INSTRUCTION TIMELINE
+      ========================== -->
+
+      <section class="panel">
+
+        <div class="child-section-label">
+          INSTRUCTIONS
+        </div>
+
+
+        <div
+          id="child-instruction-log"
+          class="child-instruction-log">
+        </div>
+
+      </section>
+
+
+
+      <!-- =========================
+           SCALE
+      ========================== -->
 
       <section
         class="panel child-scale-panel">
@@ -425,7 +551,9 @@
 
 
 
-      <!-- SCORE -->
+      <!-- =========================
+           SCORE
+      ========================== -->
 
       <section
         class="panel">
@@ -450,7 +578,9 @@
 
 
 
-      <!-- CHAT -->
+      <!-- =========================
+           CHAT
+      ========================== -->
 
       <section
         class="panel chat-panel">
