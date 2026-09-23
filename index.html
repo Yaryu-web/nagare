@@ -1,145 +1,84 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>野流 LIVE CONTROL</title>
-
   <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
 
 <div id="app">
 
-
-  <!-- =========================
-       ROLE
-  ========================== -->
-
-  <section
-    id="role-screen"
-    class="screen"
-  >
-
+  <section id="role-screen" class="screen">
     <h1>野流</h1>
-
-    <p class="subtitle">
-      LIVE CONTROL
-    </p>
-
+    <p class="subtitle">LIVE CONTROL</p>
 
     <div class="role-buttons">
-
-      <button
-        class="role-button"
-        onclick="enterParent()"
-      >
+      <button class="role-button parent" onclick="enterParent()">
         親
-
-        <small>
-          CONTROL
-        </small>
+        <small>CONTROL</small>
       </button>
 
-
-      <button
-        class="role-button"
-        onclick="enterChild()"
-      >
+      <button class="role-button child" onclick="enterChild()">
         子
-
-        <small>
-          PLAYER
-        </small>
+        <small>PLAYER</small>
       </button>
-
     </div>
-
   </section>
 
 
-
-  <!-- =========================
-       PARENT
-  ========================== -->
-
-  <section
-    id="parent-screen"
-    class="screen hidden"
-  >
+  <section id="parent-screen" class="screen hidden">
 
     <header>
-
       <div>
-
-        <h1>
-          野流 LIVE CONTROL
-        </h1>
-
-        <span class="mode">
-          PARENT
-        </span>
-
+        <h1>野流 LIVE CONTROL</h1>
+        <span class="mode">PARENT</span>
       </div>
 
-
-      <button onclick="backToRole()">
+      <button class="secondary" onclick="backToRole()">
         戻る
       </button>
-
     </header>
 
 
-
     <main class="parent-layout">
-
 
       <!-- PLAYERS -->
 
       <section class="panel">
 
-        <h2>
-          演奏者
-        </h2>
+        <div class="panel-heading">
+          <h2>演奏者</h2>
+
+          <button
+            class="small-button"
+            onclick="addPlayer()">
+            ＋ 演奏者を追加
+          </button>
+        </div>
 
         <div id="parent-players"></div>
+
+        <div
+          id="player-editor"
+          class="editor-box">
+        </div>
 
       </section>
 
 
-
-      <!-- INSTRUCTION -->
+      <!-- INSTRUCTIONS -->
 
       <section class="panel">
 
-        <h2>
-          指示
-        </h2>
-
+        <h2>指示</h2>
 
         <div
           id="selected-player"
-          class="selected-info"
-        >
+          class="selected-target">
           演奏者を選択してください
         </div>
-
-
-        <div
-          id="current-player-instruction"
-          class="current-instruction"
-        >
-          WAIT
-        </div>
-
 
         <div class="instruction-grid">
 
@@ -169,49 +108,42 @@
 
         </div>
 
-      </section>
+        <div class="broadcast-row">
 
+          <button onclick="sendInstruction('STOP', true)">
+            全員 STOP
+          </button>
+
+          <button onclick="sendInstruction('CONTINUE', true)">
+            全員 CONTINUE
+          </button>
+
+        </div>
+
+      </section>
 
 
       <!-- SCORE -->
 
       <section class="panel">
 
-        <h2>
-          スコア
-        </h2>
-
+        <h2>スコア</h2>
 
         <div id="score-list"></div>
 
-
         <hr>
 
-
-        <h3>
-          スコア編集
-        </h3>
-
+        <h3>スコア編集</h3>
 
         <label>
           タイトル
-
-          <input
-            id="score-title"
-          >
-
+          <input id="score-title">
         </label>
-
 
         <label>
           内容
-
-          <textarea
-            id="score-content"
-          ></textarea>
-
+          <textarea id="score-content"></textarea>
         </label>
-
 
         <button onclick="saveScore()">
           スコアを保存
@@ -220,129 +152,92 @@
       </section>
 
 
-
       <!-- SCALE -->
 
       <section class="panel scale-panel">
 
-        <h2>
-          SCALE
-        </h2>
+        <h2>スケール</h2>
 
-
-        <div class="scale-selector">
-
+        <div class="scale-controls">
 
           <label>
-            Category
+            カテゴリ
 
             <select
               id="scale-category"
-              onchange="renderScaleTypes()"
-            >
-
-              <option value="Western">
-                Western
-              </option>
-
-              <option value="Japanese">
-                Japanese
-              </option>
-
-              <option value="World">
-                World
-              </option>
-
-              <option value="Custom">
-                Custom
-              </option>
-
+              onchange="renderScaleList()">
             </select>
 
           </label>
 
 
           <label>
-            Type
+            スケール
 
             <select
-              id="scale-type"
-              onchange="renderScaleRoots()"
-            ></select>
+              id="scale-select"
+              onchange="previewScale()">
+            </select>
 
           </label>
 
+        </div>
 
-          <label>
-            Root
 
-            <select
-              id="scale-root"
-            ></select>
+        <div
+          id="scale-preview"
+          class="scale-preview">
+        </div>
 
-          </label>
 
+        <button
+          class="send-scale"
+          onclick="sendScale()">
+          このスケールを送信
+        </button>
+
+
+        <hr>
+
+        <h3>スケール編集</h3>
+
+        <div id="scale-editor"></div>
+
+      </section>
+
+
+      <!-- CHAT / TIMELINE -->
+
+      <section class="panel chat-panel">
+
+        <div class="panel-heading">
+
+          <h2>
+            指示 / チャット タイムライン
+          </h2>
 
           <button
-            class="scale-send-button"
-            onclick="sendScale()"
-          >
-            SCALEを送信
+            class="small-button"
+            onclick="clearTimeline()">
+            クリア
           </button>
 
         </div>
 
 
-        <div class="scale-current">
-
-          <div class="scale-current-label">
-            CURRENT SCALE
-          </div>
-
-          <div
-            id="parent-scale-name"
-            class="scale-name"
-          >
-            —
-          </div>
-
-
-          <div
-            id="parent-scale-notes"
-            class="scale-notes"
-          >
-            —
-          </div>
-
+        <div
+          id="chat-log"
+          class="timeline">
         </div>
-
-      </section>
-
-
-
-      <!-- CHAT -->
-
-      <section class="panel chat-panel">
-
-        <h2>
-          チャット
-        </h2>
-
-
-        <div id="chat-log"></div>
 
 
         <div class="chat-input">
 
           <input
             id="parent-chat-input"
-            placeholder="メッセージ"
-          >
+            placeholder="メッセージ">
 
-
-          <button
-            onclick="sendParentChat()"
-          >
+          <button onclick="sendParentChat()">
             送信
           </button>
 
@@ -350,43 +245,29 @@
 
       </section>
 
-
     </main>
 
   </section>
 
 
+  <!-- CHILD -->
 
-  <!-- =========================
-       CHILD
-  ========================== -->
-
-  <section
-    id="child-screen"
-    class="screen hidden"
-  >
+  <section id="child-screen" class="screen hidden">
 
     <header>
 
       <div>
-
-        <h1>
-          野流
-        </h1>
-
-        <span class="mode">
-          PLAYER
-        </span>
-
+        <h1>野流</h1>
+        <span class="mode">PLAYER</span>
       </div>
 
-
-      <button onclick="backToRole()">
+      <button
+        class="secondary"
+        onclick="backToRole()">
         戻る
       </button>
 
     </header>
-
 
 
     <main class="child-layout">
@@ -396,50 +277,67 @@
 
       <section class="panel">
 
-        <h2>
-          自分の演奏者
-        </h2>
-
-
-        <select
-          id="child-player-select"
-          onchange="selectChildPlayer()"
-          class="child-player-select"
-        ></select>
-
+        <h2>自分のパート</h2>
 
         <div
-          id="child-player-name"
-          class="child-player-name"
-        >
-          —
+          id="child-player-list"
+          class="child-player-list">
         </div>
 
       </section>
 
 
-
-      <!-- INSTRUCTION -->
+      <!-- CURRENT INSTRUCTION -->
 
       <section class="player-card">
 
         <div
-          id="child-instrument"
-          class="player-instrument"
-        >
+          id="child-player-name"
+          class="child-player-name">
           —
         </div>
 
+        <div
+          id="child-instrument"
+          class="player-instrument">
+          —
+        </div>
 
         <div
           id="child-instruction"
-          class="instruction-display"
-        >
+          class="instruction-display">
           WAIT
         </div>
 
       </section>
 
+
+      <!-- GLOBAL -->
+
+      <section class="panel">
+
+        <h2>全体への指示</h2>
+
+        <div
+          id="child-global-instructions"
+          class="instruction-history">
+        </div>
+
+      </section>
+
+
+      <!-- PERSONAL -->
+
+      <section class="panel">
+
+        <h2>自分への指示</h2>
+
+        <div
+          id="child-personal-instructions"
+          class="instruction-history">
+        </div>
+
+      </section>
 
 
       <!-- SCORE -->
@@ -450,42 +348,26 @@
           SCORE
         </h2>
 
-
         <div
           id="child-score-content"
-          class="score-display"
-        ></div>
+          class="score-display">
+        </div>
 
       </section>
-
 
 
       <!-- SCALE -->
 
       <section class="panel">
 
-        <div class="scale-current-label">
-          CURRENT SCALE
-        </div>
-
+        <h2>現在のスケール</h2>
 
         <div
-          id="child-scale-name"
-          class="scale-name"
-        >
-          —
-        </div>
-
-
-        <div
-          id="child-scale-notes"
-          class="scale-notes"
-        >
-          —
+          id="child-scale"
+          class="scale-preview">
         </div>
 
       </section>
-
 
 
       <!-- CHAT -->
@@ -493,24 +375,21 @@
       <section class="panel chat-panel">
 
         <h2>
-          チャット
+          チャット / 指示履歴
         </h2>
 
-
-        <div id="child-chat-log"></div>
-
+        <div
+          id="child-chat-log"
+          class="timeline">
+        </div>
 
         <div class="chat-input">
 
           <input
             id="child-chat-input"
-            placeholder="メッセージ"
-          >
+            placeholder="メッセージ">
 
-
-          <button
-            onclick="sendChildChat()"
-          >
+          <button onclick="sendChildChat()">
             送信
           </button>
 
@@ -518,11 +397,9 @@
 
       </section>
 
-
     </main>
 
   </section>
-
 
 </div>
 
@@ -530,5 +407,4 @@
 <script src="app.js"></script>
 
 </body>
-
 </html>
