@@ -55,87 +55,114 @@ const scores = {
 // SCALES
 // =========================
 
-const scales = {
+const scaleCategories = {
+
+  Western: {
+
+    "F Major": [
+      "F", "G", "A", "Bb",
+      "C", "D", "E"
+    ],
+
+    "Ab Major": [
+      "Ab", "Bb", "C", "Db",
+      "Eb", "F", "G"
+    ],
+
+    "C Dorian": [
+      "C", "D", "Eb", "F",
+      "G", "A", "Bb"
+    ],
+
+    "C Mixolydian": [
+      "C", "D", "E", "F",
+      "G", "A", "Bb"
+    ],
+
+    "A Minor": [
+      "A", "B", "C", "D",
+      "E", "F", "G"
+    ],
+
+    "E Phrygian": [
+      "E", "F", "G", "A",
+      "B", "C", "D"
+    ],
+
+    "C# Pentatonic": [
+      "C#", "D#", "F",
+      "G#", "A#"
+    ]
+
+  },
+
+
+  Japanese: {
+
+    "平調子": [
+      "D", "G", "A",
+      "C", "D"
+    ],
+
+    "陰旋法": [
+      "D", "Eb", "G",
+      "A", "Bb"
+    ]
+
+  },
+
+
+  World: {
+
+    "Spanish Scale": [
+      "E", "F", "G#",
+      "A", "B", "C", "D"
+    ],
+
+    "Hirajoshi": [
+      "C", "Db", "F",
+      "G", "Ab"
+    ]
+
+  }
+
+};
+
+
+// =========================
+// FAVORITES
+// =========================
+
+let favoriteScales = {
 
   "F Major": [
-    "F",
-    "G",
-    "A",
-    "Bb",
-    "C",
-    "D",
-    "E"
+    "F", "G", "A", "Bb",
+    "C", "D", "E"
   ],
 
   "Ab Major": [
-    "Ab",
-    "Bb",
-    "C",
-    "Db",
-    "Eb",
-    "F",
-    "G"
+    "Ab", "Bb", "C", "Db",
+    "Eb", "F", "G"
+  ],
+
+  "C# Pentatonic": [
+    "C#", "D#", "F",
+    "G#", "A#"
   ],
 
   "C Dorian": [
-    "C",
-    "D",
-    "Eb",
-    "F",
-    "G",
-    "A",
-    "Bb"
-  ],
-
-  "C Mixolydian": [
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "A",
-    "Bb"
-  ],
-
-  "A Minor": [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G"
-  ],
-
-  "E Phrygian": [
-    "E",
-    "F",
-    "G",
-    "A",
-    "B",
-    "C",
-    "D"
-  ],
-
-  "平調子": [
-    "D",
-    "G",
-    "A",
-    "C",
-    "D"
-  ],
-
-  "スパニッシュスケール": [
-    "E",
-    "F",
-    "G#",
-    "A",
-    "B",
-    "C",
-    "D"
+    "C", "D", "Eb", "F",
+    "G", "A", "Bb"
   ]
 
 };
+
+
+// =========================
+// CUSTOM
+// =========================
+
+let customScales = {};
 
 
 // =========================
@@ -150,13 +177,22 @@ let childPlayer = "A";
 
 let chatMessages = [];
 
+let instructionTimeline = [];
 
-// 各演奏者ごとの指示
 let playerInstructions = {};
 
-
-// 現在送信済みのスケール
 let currentScale = null;
+
+
+// =========================
+// INITIALIZE
+// =========================
+
+Object.keys(players).forEach(id => {
+
+  playerInstructions[id] = [];
+
+});
 
 
 // =========================
@@ -301,16 +337,7 @@ function renderPlayers() {
 
         selectedPlayer = id;
 
-
-        const selected =
-          document.getElementById(
-            "selected-player"
-          );
-
-
-        selected.textContent =
-          `${player.name} / ${player.instrument}`;
-
+        updateSelectedPlayer();
 
         renderPlayers();
 
@@ -319,8 +346,6 @@ function renderPlayers() {
 
       wrapper.appendChild(button);
 
-
-      // EDIT
 
       const editButton =
         document.createElement("button");
@@ -345,8 +370,6 @@ function renderPlayers() {
         editButton
       );
 
-
-      // DELETE
 
       const deleteButton =
         document.createElement("button");
@@ -381,6 +404,38 @@ function renderPlayers() {
 }
 
 
+function updateSelectedPlayer() {
+
+  const element =
+    document.getElementById(
+      "selected-player"
+    );
+
+
+  if (!element) return;
+
+
+  if (!selectedPlayer ||
+      !players[selectedPlayer]) {
+
+    element.textContent =
+      "演奏者を選択してください";
+
+    return;
+
+  }
+
+
+  const player =
+    players[selectedPlayer];
+
+
+  element.textContent =
+    `${player.name} / ${player.instrument}`;
+
+}
+
+
 // =========================
 // ADD PLAYER
 // =========================
@@ -410,8 +465,7 @@ function addPlayer() {
   };
 
 
-  playerInstructions[id] =
-    "WAIT";
+  playerInstructions[id] = [];
 
 
   selectedPlayer = id;
@@ -571,6 +625,66 @@ function deletePlayer(id) {
 
 function sendInstruction(instruction) {
 
+  const now =
+    new Date();
+
+
+  const time =
+    now.toLocaleTimeString(
+      "ja-JP",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }
+    );
+
+
+  // 全体への指示
+
+  if (instruction === "ALL") {
+
+    Object.keys(players)
+      .forEach(id => {
+
+        if (!playerInstructions[id]) {
+
+          playerInstructions[id] = [];
+
+        }
+
+
+        playerInstructions[id].push({
+          instruction: "CONTINUE",
+          time: time,
+          scope: "ALL"
+        });
+
+      });
+
+
+    instructionTimeline.push({
+
+      time: time,
+
+      type: "instruction",
+
+      target: "全体",
+
+      instruction: "全体への指示"
+
+    });
+
+
+    renderParent();
+
+    renderChild();
+
+    return;
+
+  }
+
+
   if (!selectedPlayer) {
 
     alert(
@@ -582,11 +696,42 @@ function sendInstruction(instruction) {
   }
 
 
-  // 選択された演奏者だけに指示
+  if (!playerInstructions[selectedPlayer]) {
 
-  playerInstructions[
-    selectedPlayer
-  ] = instruction;
+    playerInstructions[selectedPlayer] = [];
+
+  }
+
+
+  playerInstructions[selectedPlayer]
+    .push({
+
+      instruction: instruction,
+
+      time: time,
+
+      scope: selectedPlayer
+
+    });
+
+
+  const player =
+    players[selectedPlayer];
+
+
+  instructionTimeline.push({
+
+    time: time,
+
+    type: "instruction",
+
+    target:
+      `${player.name} / ${player.instrument}`,
+
+    instruction:
+      instruction
+
+  });
 
 
   renderParent();
@@ -602,6 +747,95 @@ function sendInstruction(instruction) {
 
 function renderChild() {
 
+  renderChildPlayerSelector();
+
+  renderChildMain();
+
+  renderChildScale();
+
+  renderChildInstructionLog();
+
+  renderChildChat();
+
+}
+
+
+// =========================
+// CHILD PLAYER SELECTOR
+// =========================
+
+function renderChildPlayerSelector() {
+
+  const container =
+    document.getElementById(
+      "child-player-selector"
+    );
+
+
+  if (!container) return;
+
+
+  container.innerHTML = "";
+
+
+  Object.entries(players)
+    .forEach(([id, player]) => {
+
+
+      const button =
+        document.createElement("button");
+
+
+      button.className =
+        "child-player-button";
+
+
+      if (childPlayer === id) {
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      button.innerHTML = `
+
+        <strong>
+          ${escapeHTML(player.name)}
+        </strong>
+
+        <span>
+          ${escapeHTML(player.instrument)}
+        </span>
+
+      `;
+
+
+      button.onclick = () => {
+
+        childPlayer = id;
+
+        renderChild();
+
+      };
+
+
+      container.appendChild(
+        button
+      );
+
+    });
+
+}
+
+
+// =========================
+// CHILD MAIN
+// =========================
+
+function renderChildMain() {
+
   const instrumentElement =
     document.getElementById(
       "child-instrument"
@@ -612,6 +846,14 @@ function renderChild() {
     document.getElementById(
       "child-instruction"
     );
+
+
+  if (!instrumentElement ||
+      !instructionElement) {
+
+    return;
+
+  }
 
 
   if (
@@ -627,10 +869,6 @@ function renderChild() {
       "WAIT";
 
 
-    renderChildScale();
-
-    renderChildChat();
-
     return;
 
   }
@@ -644,31 +882,130 @@ function renderChild() {
     `${player.name} / ${player.instrument}`;
 
 
+  const instructions =
+    playerInstructions[childPlayer] || [];
+
+
+  const latest =
+    instructions[
+      instructions.length - 1
+    ];
+
+
   instructionElement.textContent =
-    playerInstructions[
-      childPlayer
-    ] || "WAIT";
+    latest
+      ? latest.instruction
+      : "WAIT";
 
 
   const score =
     scores[selectedScore];
 
 
-  document.getElementById(
-    "child-score-title"
-  ).textContent =
-    score.title;
+  const titleElement =
+    document.getElementById(
+      "child-score-title"
+    );
 
 
-  document.getElementById(
-    "child-score-content"
-  ).textContent =
-    score.content;
+  const contentElement =
+    document.getElementById(
+      "child-score-content"
+    );
 
 
-  renderChildScale();
+  if (titleElement) {
 
-  renderChildChat();
+    titleElement.textContent =
+      score.title;
+
+  }
+
+
+  if (contentElement) {
+
+    contentElement.textContent =
+      score.content;
+
+  }
+
+}
+
+
+// =========================
+// CHILD INSTRUCTION LOG
+// =========================
+
+function renderChildInstructionLog() {
+
+  const container =
+    document.getElementById(
+      "child-instruction-log"
+    );
+
+
+  if (!container) return;
+
+
+  container.innerHTML = "";
+
+
+  if (
+    !childPlayer ||
+    !players[childPlayer]
+  ) {
+
+    return;
+
+  }
+
+
+  const ownInstructions =
+    playerInstructions[
+      childPlayer
+    ] || [];
+
+
+  ownInstructions
+    .forEach(item => {
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "instruction-history-item";
+
+
+      const target =
+        item.scope === "ALL"
+          ? "全体"
+          : "自分";
+
+
+      div.innerHTML = `
+
+        <span class="history-time">
+          ${escapeHTML(item.time)}
+        </span>
+
+        <span class="history-target">
+          親 → ${escapeHTML(target)}
+        </span>
+
+        <strong>
+          ${escapeHTML(item.instruction)}
+        </strong>
+
+      `;
+
+
+      container.appendChild(div);
+
+    });
 
 }
 
@@ -691,7 +1028,88 @@ function initializeScaleSelector() {
   select.innerHTML = "";
 
 
-  Object.keys(scales)
+  addScaleGroup(
+    select,
+    "Favorite",
+    favoriteScales
+  );
+
+
+  Object.entries(scaleCategories)
+    .forEach(
+      ([category, categoryScales]) => {
+
+        addScaleGroup(
+          select,
+          category,
+          categoryScales
+        );
+
+      }
+    );
+
+
+  addScaleGroup(
+    select,
+    "Custom",
+    customScales
+  );
+
+
+  select.onchange =
+    () => {
+
+      renderScalePreview();
+
+      renderScaleEditor();
+
+    };
+
+
+  if (
+    currentScale &&
+    scaleExists(currentScale.name)
+  ) {
+
+    select.value =
+      currentScale.name;
+
+  } else {
+
+    select.value =
+      "F Major";
+
+  }
+
+
+  renderScalePreview();
+
+  renderScaleEditor();
+
+}
+
+
+// =========================
+// SCALE GROUP
+// =========================
+
+function addScaleGroup(
+  select,
+  category,
+  collection
+) {
+
+  const group =
+    document.createElement(
+      "optgroup"
+    );
+
+
+  group.label =
+    category;
+
+
+  Object.keys(collection)
     .forEach(scaleName => {
 
       const option =
@@ -708,26 +1126,60 @@ function initializeScaleSelector() {
         scaleName;
 
 
-      select.appendChild(
+      group.appendChild(
         option
       );
 
     });
 
 
-  select.onchange =
-    renderScalePreview;
+  select.appendChild(group);
+
+}
 
 
-  if (!currentScale) {
+// =========================
+// SCALE LOOKUP
+// =========================
 
-    select.value =
-      "F Major";
+function findScale(name) {
+
+  if (favoriteScales[name]) {
+
+    return favoriteScales[name];
 
   }
 
 
-  renderScalePreview();
+  for (
+    const category
+    of Object.values(scaleCategories)
+  ) {
+
+    if (category[name]) {
+
+      return category[name];
+
+    }
+
+  }
+
+
+  if (customScales[name]) {
+
+    return customScales[name];
+
+  }
+
+
+  return null;
+
+}
+
+
+function scaleExists(name) {
+
+  return !!findScale(name);
 
 }
 
@@ -762,7 +1214,17 @@ function renderScalePreview() {
 
 
   const notes =
-    scales[scaleName];
+    findScale(scaleName);
+
+
+  if (!notes) {
+
+    preview.innerHTML =
+      "スケール未指定";
+
+    return;
+
+  }
 
 
   preview.innerHTML = `
@@ -772,14 +1234,311 @@ function renderScalePreview() {
     </div>
 
     <div class="scale-notes">
+
       ${notes
-        .map(note =>
-          `<span>${escapeHTML(note)}</span>`
+        .map(
+          note =>
+            `<span>${escapeHTML(note)}</span>`
         )
         .join("")}
+
     </div>
 
   `;
+
+}
+
+
+// =========================
+// SCALE EDITOR
+// =========================
+
+function renderScaleEditor() {
+
+  const select =
+    document.getElementById(
+      "scale-select"
+    );
+
+
+  const nameInput =
+    document.getElementById(
+      "scale-edit-name"
+    );
+
+
+  const notesInput =
+    document.getElementById(
+      "scale-edit-notes"
+    );
+
+
+  if (
+    !select ||
+    !nameInput ||
+    !notesInput
+  ) {
+
+    return;
+
+  }
+
+
+  const name =
+    select.value;
+
+
+  const notes =
+    findScale(name);
+
+
+  nameInput.value =
+    name || "";
+
+
+  notesInput.value =
+    notes
+      ? notes.join(", ")
+      : "";
+
+}
+
+
+// =========================
+// SAVE FAVORITE
+// =========================
+
+function saveFavoriteScale() {
+
+  const nameInput =
+    document.getElementById(
+      "scale-edit-name"
+    );
+
+
+  const notesInput =
+    document.getElementById(
+      "scale-edit-notes"
+    );
+
+
+  const name =
+    nameInput.value.trim();
+
+
+  const notes =
+    parseScaleNotes(
+      notesInput.value
+    );
+
+
+  if (!name) {
+
+    alert(
+      "スケール名を入力してください"
+    );
+
+    return;
+
+  }
+
+
+  if (!notes.length) {
+
+    alert(
+      "構成音を入力してください"
+    );
+
+    return;
+
+  }
+
+
+  favoriteScales[name] =
+    notes;
+
+
+  initializeScaleSelector();
+
+
+  const select =
+    document.getElementById(
+      "scale-select"
+    );
+
+
+  select.value =
+    name;
+
+
+  renderScalePreview();
+
+  renderScaleEditor();
+
+}
+
+
+// =========================
+// SAVE CUSTOM
+// =========================
+
+function saveCustomScale() {
+
+  const nameInput =
+    document.getElementById(
+      "scale-edit-name"
+    );
+
+
+  const notesInput =
+    document.getElementById(
+      "scale-edit-notes"
+    );
+
+
+  const name =
+    nameInput.value.trim();
+
+
+  const notes =
+    parseScaleNotes(
+      notesInput.value
+    );
+
+
+  if (!name) {
+
+    alert(
+      "スケール名を入力してください"
+    );
+
+    return;
+
+  }
+
+
+  if (!notes.length) {
+
+    alert(
+      "構成音を入力してください"
+    );
+
+    return;
+
+  }
+
+
+  customScales[name] =
+    notes;
+
+
+  initializeScaleSelector();
+
+
+  const select =
+    document.getElementById(
+      "scale-select"
+    );
+
+
+  select.value =
+    name;
+
+
+  renderScalePreview();
+
+  renderScaleEditor();
+
+}
+
+
+// =========================
+// SCALE NOTES PARSER
+// =========================
+
+function parseScaleNotes(value) {
+
+  return value
+    .split(",")
+    .map(note => note.trim())
+    .filter(Boolean);
+
+}
+
+
+// =========================
+// DELETE EDITABLE SCALE
+// =========================
+
+function deleteEditableScale() {
+
+  const select =
+    document.getElementById(
+      "scale-select"
+    );
+
+
+  if (!select) return;
+
+
+  const name =
+    select.value;
+
+
+  if (
+    favoriteScales[name]
+  ) {
+
+    if (
+      !confirm(
+        `${name} をFavoriteから削除しますか？`
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    delete favoriteScales[name];
+
+  }
+
+  else if (
+    customScales[name]
+  ) {
+
+    if (
+      !confirm(
+        `${name} をCustomから削除しますか？`
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    delete customScales[name];
+
+  }
+
+  else {
+
+    alert(
+      "FavoriteまたはCustomのスケールを選択してください"
+    );
+
+    return;
+
+  }
+
+
+  initializeScaleSelector();
+
+  renderScalePreview();
+
+  renderScaleEditor();
 
 }
 
@@ -803,20 +1562,62 @@ function sendScale() {
     select.value;
 
 
+  const notes =
+    findScale(scaleName);
+
+
+  if (!notes) {
+
+    return;
+
+  }
+
+
   currentScale = {
 
     name: scaleName,
 
     notes: [
-      ...scales[scaleName]
+      ...notes
     ]
 
   };
 
 
+  const now =
+    new Date();
+
+
+  const time =
+    now.toLocaleTimeString(
+      "ja-JP",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }
+    );
+
+
+  instructionTimeline.push({
+
+    time: time,
+
+    type: "scale",
+
+    target: "全体",
+
+    instruction:
+      `SCALE / ${scaleName}`
+
+  });
+
+
   renderScalePreview();
 
   renderChild();
+
+  renderChat();
 
 }
 
@@ -839,8 +1640,10 @@ function renderChildScale() {
     );
 
 
-  if (!nameElement ||
-      !notesElement) {
+  if (
+    !nameElement ||
+    !notesElement
+  ) {
 
     return;
 
@@ -897,6 +1700,7 @@ function renderScores() {
 
   Object.entries(scores)
     .forEach(([id, score]) => {
+
 
       const button =
         document.createElement(
@@ -965,16 +1769,35 @@ function renderEditor() {
     scores[selectedScore];
 
 
-  document.getElementById(
-    "score-title"
-  ).value =
-    score.title;
+  if (!score) return;
 
 
-  document.getElementById(
-    "score-content"
-  ).value =
-    score.content;
+  const title =
+    document.getElementById(
+      "score-title"
+    );
+
+
+  const content =
+    document.getElementById(
+      "score-content"
+    );
+
+
+  if (title) {
+
+    title.value =
+      score.title;
+
+  }
+
+
+  if (content) {
+
+    content.value =
+      score.content;
+
+  }
 
 }
 
@@ -1001,7 +1824,7 @@ function saveScore() {
 
 
 // =========================
-// CHAT
+// PARENT CHAT
 // =========================
 
 function sendParentChat() {
@@ -1019,11 +1842,30 @@ function sendParentChat() {
   if (!message) return;
 
 
+  const now =
+    new Date();
+
+
+  const time =
+    now.toLocaleTimeString(
+      "ja-JP",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }
+    );
+
+
   chatMessages.push({
 
     sender: "親",
 
-    text: message
+    text: message,
+
+    time: time,
+
+    type: "chat"
 
   });
 
@@ -1037,6 +1879,10 @@ function sendParentChat() {
 
 }
 
+
+// =========================
+// CHILD CHAT
+// =========================
 
 function sendChildChat() {
 
@@ -1060,11 +1906,30 @@ function sendChildChat() {
       : "子";
 
 
+  const now =
+    new Date();
+
+
+  const time =
+    now.toLocaleTimeString(
+      "ja-JP",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }
+    );
+
+
   chatMessages.push({
 
     sender: sender,
 
-    text: message
+    text: message,
+
+    time: time,
+
+    type: "chat"
 
   });
 
@@ -1080,7 +1945,7 @@ function sendChildChat() {
 
 
 // =========================
-// CHAT RENDER
+// PARENT CHAT / TIMELINE
 // =========================
 
 function renderChat() {
@@ -1097,8 +1962,43 @@ function renderChat() {
   container.innerHTML = "";
 
 
-  chatMessages.forEach(
-    message => {
+  instructionTimeline
+    .forEach(item => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "timeline-item";
+
+
+      div.innerHTML = `
+
+        <div class="timeline-time">
+          ${escapeHTML(item.time)}
+        </div>
+
+        <div class="timeline-target">
+          → ${escapeHTML(item.target)}
+        </div>
+
+        <div class="timeline-content">
+          ${escapeHTML(item.instruction)}
+        </div>
+
+      `;
+
+
+      container.appendChild(div);
+
+    });
+
+
+  chatMessages
+    .forEach(message => {
 
       const div =
         document.createElement(
@@ -1110,17 +2010,37 @@ function renderChat() {
         "chat-message";
 
 
-      div.textContent =
-        `${message.sender}: ${message.text}`;
+      div.innerHTML = `
+
+        <span class="chat-time">
+          ${escapeHTML(message.time)}
+        </span>
+
+        <strong>
+          ${escapeHTML(message.sender)}
+        </strong>
+
+        <span>
+          ${escapeHTML(message.text)}
+        </span>
+
+      `;
 
 
       container.appendChild(div);
 
-    }
-  );
+    });
+
+
+  container.scrollTop =
+    container.scrollHeight;
 
 }
 
+
+// =========================
+// CHILD CHAT
+// =========================
 
 function renderChildChat() {
 
@@ -1136,8 +2056,8 @@ function renderChildChat() {
   container.innerHTML = "";
 
 
-  chatMessages.forEach(
-    message => {
+  chatMessages
+    .forEach(message => {
 
       const div =
         document.createElement(
@@ -1149,14 +2069,30 @@ function renderChildChat() {
         "chat-message";
 
 
-      div.textContent =
-        `${message.sender}: ${message.text}`;
+      div.innerHTML = `
+
+        <span class="chat-time">
+          ${escapeHTML(message.time)}
+        </span>
+
+        <strong>
+          ${escapeHTML(message.sender)}
+        </strong>
+
+        <span>
+          ${escapeHTML(message.text)}
+        </span>
+
+      `;
 
 
       container.appendChild(div);
 
-    }
-  );
+    });
+
+
+  container.scrollTop =
+    container.scrollHeight;
 
 }
 
@@ -1200,15 +2136,6 @@ function escapeHTML(value) {
 // =========================
 // START
 // =========================
-
-Object.keys(players)
-  .forEach(id => {
-
-    playerInstructions[id] =
-      "WAIT";
-
-  });
-
 
 showScreen(
   "role-screen"
