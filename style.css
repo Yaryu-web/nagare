@@ -28,8 +28,8 @@ button {
   padding: 24px;
 }
 
-.hidden {
-  display: none;
+.screen.hidden {
+  display: none !important;
 }
 
 
