@@ -1,8 +1,8 @@
-// =========================
+// ============================================================
 // PLAYERS
-// =========================
+// ============================================================
 
-let players = {
+const players = {
 
   A: {
     name: "A",
@@ -27,9 +27,9 @@ let players = {
 };
 
 
-// =========================
+// ============================================================
 // SCORES
-// =========================
+// ============================================================
 
 const scores = {
 
@@ -51,96 +51,105 @@ const scores = {
 };
 
 
-// =========================
+// ============================================================
 // SCALES
-// =========================
+// ============================================================
 
-const scales = {
+const scaleDefinitions = {
 
-  "F Major": [
-    "F",
-    "G",
-    "A",
-    "Bb",
-    "C",
-    "D",
-    "E"
-  ],
+  Western: {
 
-  "Ab Major": [
-    "Ab",
-    "Bb",
-    "C",
-    "Db",
-    "Eb",
-    "F",
-    "G"
-  ],
+    Major: [
+      0, 2, 4, 5, 7, 9, 11
+    ],
 
-  "C Dorian": [
-    "C",
-    "D",
-    "Eb",
-    "F",
-    "G",
-    "A",
-    "Bb"
-  ],
+    Minor: [
+      0, 2, 3, 5, 7, 8, 10
+    ],
 
-  "C Mixolydian": [
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "A",
-    "Bb"
-  ],
+    Dorian: [
+      0, 2, 3, 5, 7, 9, 10
+    ],
 
-  "A Minor": [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G"
-  ],
+    Phrygian: [
+      0, 1, 3, 5, 7, 8, 10
+    ],
 
-  "E Phrygian": [
-    "E",
-    "F",
-    "G",
-    "A",
-    "B",
-    "C",
-    "D"
-  ],
+    Lydian: [
+      0, 2, 4, 6, 7, 9, 11
+    ],
 
-  "平調子": [
-    "D",
-    "G",
-    "A",
-    "C",
-    "D"
-  ],
+    Mixolydian: [
+      0, 2, 4, 5, 7, 9, 10
+    ],
 
-  "スパニッシュスケール": [
-    "E",
-    "F",
-    "G#",
-    "A",
-    "B",
-    "C",
-    "D"
-  ]
+    Locrian: [
+      0, 1, 3, 5, 6, 8, 10
+    ]
+
+  },
+
+
+  Japanese: {
+
+    "平調子": [
+      0, 2, 5, 7, 9
+    ],
+
+    "陰旋法": [
+      0, 2, 3, 7, 9
+    ]
+
+  },
+
+
+  World: {
+
+    Spanish: [
+      0, 1, 3, 4, 5, 7, 8, 10
+    ],
+
+    Hirajoshi: [
+      0, 2, 3, 7, 8
+    ]
+
+  },
+
+
+  Custom: {
+
+    Custom: [
+      0, 2, 4, 7, 9
+    ]
+
+  }
 
 };
 
 
-// =========================
+// ============================================================
+// NOTE NAMES
+// ============================================================
+
+const noteNames = [
+  "C",
+  "C#",
+  "D",
+  "Eb",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "Ab",
+  "A",
+  "Bb",
+  "B"
+];
+
+
+// ============================================================
 // STATE
-// =========================
+// ============================================================
 
 let selectedPlayer = null;
 
@@ -152,16 +161,44 @@ let chatMessages = [];
 
 
 // 各演奏者ごとの指示
-let playerInstructions = {};
+
+const playerInstructions = {};
+
+Object.keys(players).forEach(id => {
+
+  playerInstructions[id] = "WAIT";
+
+});
 
 
-// 現在送信済みのスケール
-let currentScale = null;
+// 現在のスケール
+
+let currentScale = {
+
+  category: "Western",
+
+  type: "Major",
+
+  root: 0,
+
+  name: "C Major",
+
+  notes: [
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "A",
+    "B"
+  ]
+
+};
 
 
-// =========================
+// ============================================================
 // SCREEN
-// =========================
+// ============================================================
 
 function showScreen(id) {
 
@@ -178,24 +215,30 @@ function showScreen(id) {
     document.getElementById(id);
 
 
-  if (target) {
+  if (!target) {
 
-    target.classList.remove("hidden");
+    console.error(
+      "Screen not found:",
+      id
+    );
+
+    return;
 
   }
+
+
+  target.classList.remove("hidden");
 
 }
 
 
-// =========================
+// ============================================================
 // ROLE
-// =========================
+// ============================================================
 
 function enterParent() {
 
   showScreen("parent-screen");
-
-  initializeScaleSelector();
 
   renderParent();
 
@@ -205,6 +248,8 @@ function enterParent() {
 function enterChild() {
 
   showScreen("child-screen");
+
+  renderChildPlayerSelector();
 
   renderChild();
 
@@ -218,9 +263,9 @@ function backToRole() {
 }
 
 
-// =========================
+// ============================================================
 // PARENT
-// =========================
+// ============================================================
 
 function renderParent() {
 
@@ -232,14 +277,18 @@ function renderParent() {
 
   renderChat();
 
-  renderScalePreview();
+  renderScaleTypes();
+
+  renderCurrentParentInstruction();
+
+  renderCurrentScale();
 
 }
 
 
-// =========================
+// ============================================================
 // PLAYERS
-// =========================
+// ============================================================
 
 function renderPlayers() {
 
@@ -249,22 +298,11 @@ function renderPlayers() {
     );
 
 
-  if (!container) return;
-
-
   container.innerHTML = "";
 
 
-  Object.entries(players)
-    .forEach(([id, player]) => {
-
-
-      const wrapper =
-        document.createElement("div");
-
-
-      wrapper.className =
-        "player-item";
+  Object.entries(players).forEach(
+    ([id, player]) => {
 
 
       const button =
@@ -287,11 +325,15 @@ function renderPlayers() {
       button.innerHTML = `
 
         <div class="player-name">
-          ${escapeHTML(player.name)}
+          ${player.name}
         </div>
 
         <div class="player-instrument-small">
-          ${escapeHTML(player.instrument)}
+          ${player.instrument}
+        </div>
+
+        <div class="player-instruction-small">
+          ${playerInstructions[id]}
         </div>
 
       `;
@@ -302,272 +344,61 @@ function renderPlayers() {
         selectedPlayer = id;
 
 
-        const selected =
-          document.getElementById(
-            "selected-player"
-          );
-
-
-        selected.textContent =
+        document.getElementById(
+          "selected-player"
+        ).textContent =
           `${player.name} / ${player.instrument}`;
 
 
         renderPlayers();
 
-      };
-
-
-      wrapper.appendChild(button);
-
-
-      // EDIT
-
-      const editButton =
-        document.createElement("button");
-
-
-      editButton.className =
-        "player-edit-button";
-
-
-      editButton.textContent =
-        "編集";
-
-
-      editButton.onclick = () => {
-
-        editPlayer(id);
+        renderCurrentParentInstruction();
 
       };
 
 
-      wrapper.appendChild(
-        editButton
-      );
+      container.appendChild(button);
 
-
-      // DELETE
-
-      const deleteButton =
-        document.createElement("button");
-
-
-      deleteButton.className =
-        "player-delete-button";
-
-
-      deleteButton.textContent =
-        "削除";
-
-
-      deleteButton.onclick = () => {
-
-        deletePlayer(id);
-
-      };
-
-
-      wrapper.appendChild(
-        deleteButton
-      );
-
-
-      container.appendChild(
-        wrapper
-      );
-
-    });
+    }
+  );
 
 }
 
 
-// =========================
-// ADD PLAYER
-// =========================
+// ============================================================
+// CURRENT PLAYER INSTRUCTION
+// ============================================================
 
-function addPlayer() {
+function renderCurrentParentInstruction() {
 
-  let number = 1;
-
-  let id;
-
-
-  do {
-
-    id = `P${number}`;
-
-    number++;
-
-  } while (players[id]);
+  const display =
+    document.getElementById(
+      "current-player-instruction"
+    );
 
 
-  players[id] = {
-
-    name: id,
-
-    instrument: "楽器"
-
-  };
+  if (!display) return;
 
 
-  playerInstructions[id] =
-    "WAIT";
+  if (!selectedPlayer) {
+
+    display.textContent =
+      "WAIT";
+
+    return;
+
+  }
 
 
-  selectedPlayer = id;
-
-
-  renderParent();
+  display.textContent =
+    playerInstructions[selectedPlayer];
 
 }
 
 
-// =========================
-// EDIT PLAYER
-// =========================
-
-function editPlayer(id) {
-
-  const player =
-    players[id];
-
-
-  if (!player) return;
-
-
-  const newName =
-    prompt(
-      "演奏者名",
-      player.name
-    );
-
-
-  if (newName === null) {
-
-    return;
-
-  }
-
-
-  const trimmedName =
-    newName.trim();
-
-
-  if (!trimmedName) {
-
-    alert(
-      "演奏者名を入力してください"
-    );
-
-    return;
-
-  }
-
-
-  const newInstrument =
-    prompt(
-      "楽器名",
-      player.instrument
-    );
-
-
-  if (newInstrument === null) {
-
-    return;
-
-  }
-
-
-  const trimmedInstrument =
-    newInstrument.trim();
-
-
-  if (!trimmedInstrument) {
-
-    alert(
-      "楽器名を入力してください"
-    );
-
-    return;
-
-  }
-
-
-  player.name =
-    trimmedName;
-
-
-  player.instrument =
-    trimmedInstrument;
-
-
-  renderParent();
-
-  renderChild();
-
-}
-
-
-// =========================
-// DELETE PLAYER
-// =========================
-
-function deletePlayer(id) {
-
-  const player =
-    players[id];
-
-
-  if (!player) return;
-
-
-  if (
-    !confirm(
-      `${player.name}（${player.instrument}）を削除しますか？`
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  delete players[id];
-
-  delete playerInstructions[id];
-
-
-  if (selectedPlayer === id) {
-
-    selectedPlayer = null;
-
-  }
-
-
-  if (childPlayer === id) {
-
-    const remaining =
-      Object.keys(players);
-
-
-    childPlayer =
-      remaining.length
-        ? remaining[0]
-        : null;
-
-  }
-
-
-  renderParent();
-
-  renderChild();
-
-}
-
-
-// =========================
-// INSTRUCTIONS
-// =========================
+// ============================================================
+// SEND INSTRUCTION
+// ============================================================
 
 function sendInstruction(instruction) {
 
@@ -582,304 +413,24 @@ function sendInstruction(instruction) {
   }
 
 
-  // 選択された演奏者だけに指示
+  // 演奏者ごとに保存
 
-  playerInstructions[
-    selectedPlayer
-  ] = instruction;
+  playerInstructions[selectedPlayer] =
+    instruction;
 
 
-  renderParent();
+  renderPlayers();
+
+  renderCurrentParentInstruction();
 
   renderChild();
 
 }
 
 
-// =========================
-// CHILD
-// =========================
-
-function renderChild() {
-
-  const instrumentElement =
-    document.getElementById(
-      "child-instrument"
-    );
-
-
-  const instructionElement =
-    document.getElementById(
-      "child-instruction"
-    );
-
-
-  if (
-    !childPlayer ||
-    !players[childPlayer]
-  ) {
-
-    instrumentElement.textContent =
-      "演奏者なし";
-
-
-    instructionElement.textContent =
-      "WAIT";
-
-
-    renderChildScale();
-
-    renderChildChat();
-
-    return;
-
-  }
-
-
-  const player =
-    players[childPlayer];
-
-
-  instrumentElement.textContent =
-    `${player.name} / ${player.instrument}`;
-
-
-  instructionElement.textContent =
-    playerInstructions[
-      childPlayer
-    ] || "WAIT";
-
-
-  const score =
-    scores[selectedScore];
-
-
-  document.getElementById(
-    "child-score-title"
-  ).textContent =
-    score.title;
-
-
-  document.getElementById(
-    "child-score-content"
-  ).textContent =
-    score.content;
-
-
-  renderChildScale();
-
-  renderChildChat();
-
-}
-
-
-// =========================
-// SCALE SELECTOR
-// =========================
-
-function initializeScaleSelector() {
-
-  const select =
-    document.getElementById(
-      "scale-select"
-    );
-
-
-  if (!select) return;
-
-
-  select.innerHTML = "";
-
-
-  Object.keys(scales)
-    .forEach(scaleName => {
-
-      const option =
-        document.createElement(
-          "option"
-        );
-
-
-      option.value =
-        scaleName;
-
-
-      option.textContent =
-        scaleName;
-
-
-      select.appendChild(
-        option
-      );
-
-    });
-
-
-  select.onchange =
-    renderScalePreview;
-
-
-  if (!currentScale) {
-
-    select.value =
-      "F Major";
-
-  }
-
-
-  renderScalePreview();
-
-}
-
-
-// =========================
-// SCALE PREVIEW
-// =========================
-
-function renderScalePreview() {
-
-  const select =
-    document.getElementById(
-      "scale-select"
-    );
-
-
-  const preview =
-    document.getElementById(
-      "parent-scale-preview"
-    );
-
-
-  if (!select || !preview) {
-
-    return;
-
-  }
-
-
-  const scaleName =
-    select.value;
-
-
-  const notes =
-    scales[scaleName];
-
-
-  preview.innerHTML = `
-
-    <div class="scale-preview-name">
-      ${escapeHTML(scaleName)}
-    </div>
-
-    <div class="scale-notes">
-      ${notes
-        .map(note =>
-          `<span>${escapeHTML(note)}</span>`
-        )
-        .join("")}
-    </div>
-
-  `;
-
-}
-
-
-// =========================
-// SEND SCALE
-// =========================
-
-function sendScale() {
-
-  const select =
-    document.getElementById(
-      "scale-select"
-    );
-
-
-  if (!select) return;
-
-
-  const scaleName =
-    select.value;
-
-
-  currentScale = {
-
-    name: scaleName,
-
-    notes: [
-      ...scales[scaleName]
-    ]
-
-  };
-
-
-  renderScalePreview();
-
-  renderChild();
-
-}
-
-
-// =========================
-// CHILD SCALE
-// =========================
-
-function renderChildScale() {
-
-  const nameElement =
-    document.getElementById(
-      "child-scale-name"
-    );
-
-
-  const notesElement =
-    document.getElementById(
-      "child-scale-notes"
-    );
-
-
-  if (!nameElement ||
-      !notesElement) {
-
-    return;
-
-  }
-
-
-  if (!currentScale) {
-
-    nameElement.textContent =
-      "—";
-
-
-    notesElement.textContent =
-      "スケール未指定";
-
-
-    return;
-
-  }
-
-
-  nameElement.textContent =
-    currentScale.name;
-
-
-  notesElement.innerHTML =
-    currentScale.notes
-      .map(
-        note =>
-          `<span>${escapeHTML(note)}</span>`
-      )
-      .join("");
-
-}
-
-
-// =========================
+// ============================================================
 // SCORES
-// =========================
+// ============================================================
 
 function renderScores() {
 
@@ -889,19 +440,15 @@ function renderScores() {
     );
 
 
-  if (!container) return;
-
-
   container.innerHTML = "";
 
 
-  Object.entries(scores)
-    .forEach(([id, score]) => {
+  Object.entries(scores).forEach(
+    ([id, score]) => {
+
 
       const button =
-        document.createElement(
-          "button"
-        );
+        document.createElement("button");
 
 
       button.className =
@@ -923,12 +470,12 @@ function renderScores() {
       button.innerHTML = `
 
         <strong>
-          ${escapeHTML(score.title)}
+          ${score.title}
         </strong>
 
         <br>
 
-        ${escapeHTML(score.content)}
+        ${score.content}
 
       `;
 
@@ -938,7 +485,6 @@ function renderScores() {
         selectedScore =
           Number(id);
 
-
         renderParent();
 
         renderChild();
@@ -946,18 +492,17 @@ function renderScores() {
       };
 
 
-      container.appendChild(
-        button
-      );
+      container.appendChild(button);
 
-    });
+    }
+  );
 
 }
 
 
-// =========================
+// ============================================================
 // SCORE EDITOR
-// =========================
+// ============================================================
 
 function renderEditor() {
 
@@ -1000,9 +545,372 @@ function saveScore() {
 }
 
 
-// =========================
+// ============================================================
+// CHILD PLAYER SELECTOR
+// ============================================================
+
+function renderChildPlayerSelector() {
+
+  const select =
+    document.getElementById(
+      "child-player-select"
+    );
+
+
+  if (!select) return;
+
+
+  select.innerHTML = "";
+
+
+  Object.entries(players).forEach(
+    ([id, player]) => {
+
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value = id;
+
+
+      option.textContent =
+        `${player.name} / ${player.instrument}`;
+
+
+      if (id === childPlayer) {
+
+        option.selected = true;
+
+      }
+
+
+      select.appendChild(option);
+
+    }
+  );
+
+
+  updateChildPlayerName();
+
+}
+
+
+function selectChildPlayer() {
+
+  const select =
+    document.getElementById(
+      "child-player-select"
+    );
+
+
+  childPlayer =
+    select.value;
+
+
+  updateChildPlayerName();
+
+  renderChild();
+
+}
+
+
+function updateChildPlayerName() {
+
+  const player =
+    players[childPlayer];
+
+
+  const name =
+    document.getElementById(
+      "child-player-name"
+    );
+
+
+  if (!name) return;
+
+
+  name.textContent =
+    `${player.name} / ${player.instrument}`;
+
+}
+
+
+// ============================================================
+// CHILD
+// ============================================================
+
+function renderChild() {
+
+  const player =
+    players[childPlayer];
+
+
+  if (!player) return;
+
+
+  document.getElementById(
+    "child-instrument"
+  ).textContent =
+    player.instrument;
+
+
+  document.getElementById(
+    "child-instruction"
+  ).textContent =
+    playerInstructions[childPlayer];
+
+
+  document.getElementById(
+    "child-score-title"
+  ).textContent =
+    scores[selectedScore].title;
+
+
+  document.getElementById(
+    "child-score-content"
+  ).textContent =
+    scores[selectedScore].content;
+
+
+  renderCurrentScale();
+
+  renderChildChat();
+
+  updateChildPlayerName();
+
+}
+
+
+// ============================================================
+// SCALE CATEGORY
+// ============================================================
+
+function renderScaleTypes() {
+
+  const category =
+    document.getElementById(
+      "scale-category"
+    ).value;
+
+
+  const typeSelect =
+    document.getElementById(
+      "scale-type"
+    );
+
+
+  if (!typeSelect) return;
+
+
+  typeSelect.innerHTML = "";
+
+
+  Object.keys(
+    scaleDefinitions[category]
+  ).forEach(type => {
+
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+
+    option.value = type;
+
+    option.textContent = type;
+
+
+    typeSelect.appendChild(
+      option
+    );
+
+  });
+
+
+  renderScaleRoots();
+
+}
+
+
+// ============================================================
+// ROOT
+// ============================================================
+
+function renderScaleRoots() {
+
+  const rootSelect =
+    document.getElementById(
+      "scale-root"
+    );
+
+
+  if (!rootSelect) return;
+
+
+  rootSelect.innerHTML = "";
+
+
+  noteNames.forEach(
+    (note, index) => {
+
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value = index;
+
+      option.textContent = note;
+
+
+      rootSelect.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+
+// ============================================================
+// SCALE
+// ============================================================
+
+function sendScale() {
+
+  const category =
+    document.getElementById(
+      "scale-category"
+    ).value;
+
+
+  const type =
+    document.getElementById(
+      "scale-type"
+    ).value;
+
+
+  const root =
+    Number(
+      document.getElementById(
+        "scale-root"
+      ).value
+    );
+
+
+  const intervals =
+    scaleDefinitions
+      [category]
+      [type];
+
+
+  const notes =
+    intervals.map(interval => {
+
+      return noteNames[
+        (root + interval) % 12
+      ];
+
+    });
+
+
+  currentScale = {
+
+    category: category,
+
+    type: type,
+
+    root: root,
+
+    name:
+      `${noteNames[root]} ${type}`,
+
+    notes: notes
+
+  };
+
+
+  renderCurrentScale();
+
+  renderChild();
+
+}
+
+
+// ============================================================
+// RENDER SCALE
+// ============================================================
+
+function renderCurrentScale() {
+
+  const parentName =
+    document.getElementById(
+      "parent-scale-name"
+    );
+
+
+  const parentNotes =
+    document.getElementById(
+      "parent-scale-notes"
+    );
+
+
+  const childName =
+    document.getElementById(
+      "child-scale-name"
+    );
+
+
+  const childNotes =
+    document.getElementById(
+      "child-scale-notes"
+    );
+
+
+  if (parentName) {
+
+    parentName.textContent =
+      currentScale.name;
+
+  }
+
+
+  if (parentNotes) {
+
+    parentNotes.textContent =
+      currentScale.notes.join("  ");
+
+  }
+
+
+  if (childName) {
+
+    childName.textContent =
+      currentScale.name;
+
+  }
+
+
+  if (childNotes) {
+
+    childNotes.textContent =
+      currentScale.notes.join("  ");
+
+  }
+
+}
+
+
+// ============================================================
 // CHAT
-// =========================
+// ============================================================
 
 function sendParentChat() {
 
@@ -1053,16 +961,10 @@ function sendChildChat() {
   if (!message) return;
 
 
-  const sender =
-    childPlayer &&
-    players[childPlayer]
-      ? players[childPlayer].instrument
-      : "子";
-
-
   chatMessages.push({
 
-    sender: sender,
+    sender:
+      players[childPlayer].instrument,
 
     text: message
 
@@ -1079,9 +981,9 @@ function sendChildChat() {
 }
 
 
-// =========================
+// ============================================================
 // CHAT RENDER
-// =========================
+// ============================================================
 
 function renderChat() {
 
@@ -1091,14 +993,12 @@ function renderChat() {
     );
 
 
-  if (!container) return;
-
-
   container.innerHTML = "";
 
 
   chatMessages.forEach(
     message => {
+
 
       const div =
         document.createElement(
@@ -1130,14 +1030,12 @@ function renderChildChat() {
     );
 
 
-  if (!container) return;
-
-
   container.innerHTML = "";
 
 
   chatMessages.forEach(
     message => {
+
 
       const div =
         document.createElement(
@@ -1161,54 +1059,9 @@ function renderChildChat() {
 }
 
 
-// =========================
-// HTML ESCAPE
-// =========================
-
-function escapeHTML(value) {
-
-  return String(value)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-// =========================
+// ============================================================
 // START
-// =========================
-
-Object.keys(players)
-  .forEach(id => {
-
-    playerInstructions[id] =
-      "WAIT";
-
-  });
-
+// ============================================================
 
 showScreen(
   "role-screen"
