@@ -2,7 +2,6 @@
 <html lang="ja">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -14,7 +13,6 @@
   <link
     rel="stylesheet"
     href="style.css">
-
 </head>
 
 
@@ -78,7 +76,6 @@
     id="parent-screen"
     class="screen hidden">
 
-
     <header>
 
       <div>
@@ -93,36 +90,23 @@
 
       </div>
 
-
-      <button
-        onclick="backToRole()">
-
+      <button onclick="backToRole()">
         戻る
-
       </button>
 
     </header>
 
 
-
     <main class="parent-layout">
 
 
-      <!-- =========================
-           PLAYERS
-      ========================== -->
+      <!-- PLAYERS -->
 
       <section class="panel">
 
-        <h2>
-          演奏者
-        </h2>
+        <h2>演奏者</h2>
 
-
-        <div
-          id="parent-players">
-        </div>
-
+        <div id="parent-players"></div>
 
         <button
           class="add-player-button"
@@ -136,16 +120,11 @@
 
 
 
-      <!-- =========================
-           INSTRUCTION
-      ========================== -->
+      <!-- INSTRUCTION -->
 
       <section class="panel">
 
-        <h2>
-          指示
-        </h2>
-
+        <h2>指示</h2>
 
         <div
           id="selected-player"
@@ -156,8 +135,7 @@
         </div>
 
 
-        <div
-          class="instruction-grid">
+        <div class="instruction-grid">
 
           <button
             onclick="sendInstruction('STOP')">
@@ -189,10 +167,43 @@
             FREE
           </button>
 
+        </div>
+
+
+        <hr>
+
+        <h3>全体への指示</h3>
+
+        <div class="instruction-grid">
+
           <button
-            class="instruction-all"
-            onclick="sendInstruction('ALL')">
-            全体へ
+            onclick="sendGlobalInstruction('STOP')">
+            STOP
+          </button>
+
+          <button
+            onclick="sendGlobalInstruction('CONTINUE')">
+            CONTINUE
+          </button>
+
+          <button
+            onclick="sendGlobalInstruction('LOUDER')">
+            LOUDER
+          </button>
+
+          <button
+            onclick="sendGlobalInstruction('QUIETER')">
+            QUIETER
+          </button>
+
+          <button
+            onclick="sendGlobalInstruction('SOLO')">
+            SOLO
+          </button>
+
+          <button
+            onclick="sendGlobalInstruction('FREE')">
+            FREE
           </button>
 
         </div>
@@ -201,25 +212,17 @@
 
 
 
-      <!-- =========================
-           SCALE
-      ========================== -->
+      <!-- SCALE -->
 
       <section class="panel scale-panel">
 
-        <h2>
-          スケール
-        </h2>
-
+        <h2>スケール</h2>
 
         <label>
 
           スケール
 
-          <select
-            id="scale-select">
-
-          </select>
+          <select id="scale-select"></select>
 
         </label>
 
@@ -227,7 +230,6 @@
         <div
           id="parent-scale-preview"
           class="scale-preview">
-
         </div>
 
 
@@ -240,101 +242,57 @@
         </button>
 
 
-        <!-- SCALE EDITOR -->
+        <hr>
 
-        <div class="scale-editor">
+        <h3>Favorite / Custom 編集</h3>
 
-          <h3>
-            Favorite / Custom 編集
-          </h3>
+        <label>
 
+          スケール名
 
-          <label>
+          <input
+            id="custom-scale-name"
+            placeholder="例：My Scale">
 
-            名前
-
-            <input
-              id="scale-edit-name"
-              placeholder="例：C# Panta">
-
-          </label>
+        </label>
 
 
-          <label>
+        <label>
 
-            構成音
+          構成音
 
-            <input
-              id="scale-edit-notes"
-              placeholder="例：C#, D#, F#, G#, A#">
+          <input
+            id="custom-scale-notes"
+            placeholder="例：C D E F# G A">
 
-          </label>
-
-
-          <div class="scale-editor-buttons">
-
-            <button
-              onclick="saveFavoriteScale()">
-
-              Favoriteに保存
-
-            </button>
+        </label>
 
 
-            <button
-              onclick="saveCustomScale()">
-
-              Customに保存
-
-            </button>
-
-          </div>
-
-
-          <button
-            class="danger-button"
-            onclick="deleteEditableScale()">
-
-            選択中のFavorite / Customを削除
-
-          </button>
-
-        </div>
+        <button onclick="saveCustomScale()">
+          保存
+        </button>
 
       </section>
 
 
 
-      <!-- =========================
-           SCORE
-      ========================== -->
+      <!-- SCORE -->
 
       <section class="panel">
 
-        <h2>
-          スコア
-        </h2>
+        <h2>スコア</h2>
 
-
-        <div
-          id="score-list">
-        </div>
-
+        <div id="score-list"></div>
 
         <hr>
 
-
-        <h3>
-          スコア編集
-        </h3>
-
+        <h3>スコア編集</h3>
 
         <label>
 
           タイトル
 
-          <input
-            id="score-title">
+          <input id="score-title">
 
         </label>
 
@@ -343,53 +301,37 @@
 
           内容
 
-          <textarea
-            id="score-content"></textarea>
+          <textarea id="score-content"></textarea>
 
         </label>
 
 
-        <button
-          onclick="saveScore()">
-
+        <button onclick="saveScore()">
           スコアを保存
-
         </button>
 
       </section>
 
 
 
-      <!-- =========================
-           CHAT / TIMELINE
-      ========================== -->
+      <!-- CHAT / TIMELINE -->
 
-      <section
-        class="panel chat-panel">
+      <section class="panel chat-panel">
 
-        <h2>
-          チャット / TIMELINE
-        </h2>
+        <h2>指示 / チャット</h2>
+
+        <div id="chat-log"></div>
 
 
-        <div
-          id="chat-log">
-        </div>
-
-
-        <div
-          class="chat-input">
+        <div class="chat-input">
 
           <input
             id="parent-chat-input"
             placeholder="メッセージ">
 
 
-          <button
-            onclick="sendParentChat()">
-
+          <button onclick="sendParentChat()">
             送信
-
           </button>
 
         </div>
@@ -411,14 +353,11 @@
     id="child-screen"
     class="screen hidden">
 
-
     <header>
 
       <div>
 
-        <h1>
-          野流
-        </h1>
+        <h1>野流</h1>
 
         <span class="mode">
           PLAYER
@@ -426,53 +365,35 @@
 
       </div>
 
-
-      <button
-        onclick="backToRole()">
-
+      <button onclick="backToRole()">
         戻る
-
       </button>
 
     </header>
 
 
-
     <main class="child-layout">
 
 
-      <!-- =========================
-           PLAYER SELECT
-      ========================== -->
+      <!-- PLAYER SELECT -->
 
-      <section class="panel child-player-select-panel">
+      <section class="panel">
 
-        <div class="child-section-label">
-          YOUR PART
-        </div>
+        <h2>自分のパート</h2>
 
+        <select
+          id="child-player-select"
+          onchange="selectChildPlayer()">
 
-        <h2>
-          自分の演奏者を選択
-        </h2>
-
-
-        <div
-          id="child-player-selector"
-          class="child-player-selector">
-        </div>
+        </select>
 
       </section>
 
 
 
-      <!-- =========================
-           PLAYER / INSTRUCTION
-      ========================== -->
+      <!-- PLAYER -->
 
-      <section
-        class="player-card">
-
+      <section class="player-card">
 
         <div
           class="player-instrument"
@@ -491,38 +412,13 @@
 
         </div>
 
-
       </section>
 
 
 
-      <!-- =========================
-           INSTRUCTION TIMELINE
-      ========================== -->
+      <!-- SCALE -->
 
-      <section class="panel">
-
-        <div class="child-section-label">
-          INSTRUCTIONS
-        </div>
-
-
-        <div
-          id="child-instruction-log"
-          class="child-instruction-log">
-        </div>
-
-      </section>
-
-
-
-      <!-- =========================
-           SCALE
-      ========================== -->
-
-      <section
-        class="panel child-scale-panel">
-
+      <section class="panel child-scale-panel">
 
         <div class="child-section-label">
           SCALE
@@ -546,24 +442,16 @@
 
         </div>
 
-
       </section>
 
 
 
-      <!-- =========================
-           SCORE
-      ========================== -->
+      <!-- SCORE -->
 
-      <section
-        class="panel">
+      <section class="panel">
 
-
-        <h2
-          id="child-score-title">
-
+        <h2 id="child-score-title">
           SCORE
-
         </h2>
 
 
@@ -573,46 +461,34 @@
 
         </div>
 
-
       </section>
 
 
 
-      <!-- =========================
-           CHAT
-      ========================== -->
+      <!-- CHAT -->
 
-      <section
-        class="panel chat-panel">
-
+      <section class="panel chat-panel">
 
         <h2>
-          チャット
+          指示 / チャット
         </h2>
 
 
-        <div
-          id="child-chat-log">
-        </div>
+        <div id="child-chat-log"></div>
 
 
-        <div
-          class="chat-input">
+        <div class="chat-input">
 
           <input
             id="child-chat-input"
             placeholder="メッセージ">
 
 
-          <button
-            onclick="sendChildChat()">
-
+          <button onclick="sendChildChat()">
             送信
-
           </button>
 
         </div>
-
 
       </section>
 
@@ -623,6 +499,77 @@
 
 
 </div>
+
+
+
+<!-- =========================
+     FIREBASE
+========================== -->
+
+<script type="module">
+
+  import {
+    initializeApp
+  }
+  from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+
+  import {
+    getDatabase,
+    ref,
+    set,
+    push,
+    onValue,
+    remove
+  }
+  from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+  const firebaseConfig = {
+
+    apiKey:
+      "AIzaSyBvmH9nXVq_Ys0CDGafHwo0zGP64S-KKY",
+
+    authDomain:
+      "yaryu-live-control.firebaseapp.com",
+
+    databaseURL:
+      "https://yaryu-live-control-default-rtdb.firebaseio.com",
+
+    projectId:
+      "yaryu-live-control",
+
+    storageBucket:
+      "yaryu-live-control.firebasestorage.app",
+
+    messagingSenderId:
+      "364112884906",
+
+    appId:
+      "1:364112884906:web:a30198670caa2f2d344cd3"
+
+  };
+
+
+  const firebaseApp =
+    initializeApp(firebaseConfig);
+
+
+  const database =
+    getDatabase(firebaseApp);
+
+
+  window.yaryuDB = {
+    database,
+    ref,
+    set,
+    push,
+    onValue,
+    remove
+  };
+
+</script>
+
 
 
 <script src="app.js"></script>
