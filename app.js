@@ -1533,6 +1533,44 @@ async function () {
 
 };
 
+// =========================
+// CHAT RESET
+// =========================
+
+function resetChat() {
+
+  const confirmed =
+    confirm(
+      "チャット履歴をすべて削除しますか？"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const chatRef =
+    ref(db, "chat");
+
+  remove(chatRef)
+    .then(() => {
+
+      console.log("チャットをリセットしました");
+
+    })
+    .catch((error) => {
+
+      console.error(
+        "チャットのリセットに失敗しました:",
+        error
+      );
+
+      alert(
+        "チャットのリセットに失敗しました"
+      );
+
+    });
+
+}
 
 // =====================================================
 // CHILD CHAT
