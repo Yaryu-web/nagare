@@ -1565,12 +1565,11 @@ async function () {
 // =========================
 // CHAT RESET
 // =========================
-
 function resetChat() {
 
   const confirmed =
     confirm(
-      "チャット履歴をすべて削除しますか？"
+      "チャットと指示の履歴をすべて削除しますか？"
     );
 
   if (!confirmed) {
@@ -1580,21 +1579,29 @@ function resetChat() {
   const chatRef =
     ref(db, "yaryu/chat");
 
-  remove(chatRef)
+  const instructionRef =
+    ref(db, "yaryu/instructions");
+
+  Promise.all([
+    remove(chatRef),
+    remove(instructionRef)
+  ])
     .then(() => {
 
-      console.log("チャットをリセットしました");
+      console.log(
+        "チャットと指示をリセットしました"
+      );
 
     })
     .catch((error) => {
 
       console.error(
-        "チャットのリセットに失敗しました:",
+        "リセットに失敗しました:",
         error
       );
 
       alert(
-        "チャットのリセットに失敗しました"
+        "リセットに失敗しました"
       );
 
     });
