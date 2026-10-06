@@ -1475,6 +1475,35 @@ function renderChildScale() {
 
 }
 
+// =========================
+// LIVE RESET
+// =========================
+
+function resetLive() {
+
+  if (
+    !confirm(
+      "このライブのチャットと指示をすべて消去しますか？"
+    )
+  ) {
+    return;
+  }
+
+  // チャットを消去
+  chatMessages = [];
+
+  // 全演奏者の指示を WAIT に戻す
+  Object.keys(players).forEach(id => {
+
+    playerInstructions[id] = "WAIT";
+
+  });
+
+  // 画面を更新
+  renderParent();
+  renderChild();
+
+}
 
 // =====================================================
 // CHAT
