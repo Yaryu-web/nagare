@@ -320,40 +320,47 @@
            CHAT / TIMELINE
       ================================================== -->
 
-      <section
-        class="panel chat-panel">
+     <section class="panel chat-panel">
 
-        <h2>
-          チャット / 指示タイムライン
-        </h2>
+  <div class="chat-header">
 
+    <h2>
+      チャット
+    </h2>
 
-        <div
-          id="chat-log">
+    <button
+      class="chat-reset-button"
+      onclick="resetChat()">
 
-        </div>
+      チャットをリセット
 
+    </button>
 
-        <div
-          class="chat-input">
-
-          <input
-            id="parent-chat-input"
-            type="text"
-            placeholder="メッセージ">
+  </div>
 
 
-          <button
-            onclick="sendParentChat()">
+  <div
+    id="chat-log">
+  </div>
 
-            送信
 
-          </button>
+  <div
+    class="chat-input">
 
-        </div>
+    <input
+      id="parent-chat-input"
+      placeholder="メッセージ">
 
-      </section>
+    <button
+      onclick="sendParentChat()">
 
+      送信
+
+    </button>
+
+  </div>
+
+</section>
 
     </main>
 
