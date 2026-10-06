@@ -2144,3 +2144,907 @@ showScreen(
 
 
 initializeDatabase();
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #111;
+  color: #eee;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.screen {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+/* =========================
+   ROLE
+========================= */
+
+#role-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#role-screen h1 {
+  font-size: 64px;
+  margin: 0;
+}
+
+.subtitle {
+  letter-spacing: .4em;
+  margin-bottom: 60px;
+  opacity: .6;
+}
+
+.role-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.role-button {
+  width: 180px;
+  height: 180px;
+
+  border: 1px solid #555;
+
+  background: #222;
+  color: white;
+
+  font-size: 40px;
+}
+
+.role-button:hover {
+  background: #2b2b2b;
+}
+
+.role-button small {
+  display: block;
+
+  font-size: 12px;
+
+  margin-top: 10px;
+
+  opacity: .5;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 25px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.mode {
+  font-size: 11px;
+
+  letter-spacing: .2em;
+
+  opacity: .5;
+}
+
+header > button {
+  background: #222;
+
+  border: 1px solid #444;
+
+  color: white;
+
+  padding: 9px 16px;
+}
+
+
+/* =========================
+   PANELS
+========================= */
+
+.parent-layout {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+
+  max-width: 1400px;
+
+  margin: auto;
+}
+
+.panel {
+  background: #1b1b1b;
+
+  border: 1px solid #333;
+
+  padding: 20px;
+
+  min-width: 0;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+
+/* =========================
+   PLAYERS
+========================= */
+
+.player-item {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    auto;
+
+  gap: 6px;
+
+  margin-bottom: 8px;
+}
+
+.player-button {
+  width: 100%;
+
+  text-align: left;
+
+  padding: 15px;
+
+  background: #222;
+
+  border: 1px solid #444;
+
+  color: white;
+}
+
+.player-button:hover {
+  background: #292929;
+}
+
+.player-button.selected {
+  border-color: white;
+
+  background: #292929;
+}
+
+.player-name {
+  font-weight: bold;
+}
+
+.player-instrument-small {
+  opacity: .5;
+
+  font-size: 13px;
+
+  margin-top: 3px;
+}
+
+.player-edit-button,
+.player-delete-button {
+  padding: 0 10px;
+
+  background: #222;
+
+  color: #aaa;
+
+  border: 1px solid #444;
+}
+
+.player-delete-button {
+  color: #888;
+}
+
+.add-player-button {
+  width: 100%;
+
+  margin-top: 8px;
+
+  padding: 13px;
+
+  background: #222;
+
+  border: 1px dashed #555;
+
+  color: white;
+}
+
+.add-player-button:hover {
+  background: #292929;
+}
+
+
+/* =========================
+   SELECTED PLAYER
+========================= */
+
+.selected-player {
+  min-height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 10px 12px;
+
+  background: #111;
+
+  border: 1px solid #333;
+
+  color: #ddd;
+}
+
+
+/* =========================
+   INSTRUCTIONS
+========================= */
+
+.instruction-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.instruction-grid button {
+  min-height: 65px;
+
+  background: #292929;
+
+  color: white;
+
+  border: 1px solid #555;
+
+  font-weight: bold;
+}
+
+.instruction-grid button:hover {
+  background: #333;
+}
+
+.instruction-grid .instruction-all {
+  grid-column: 1 / -1;
+
+  background: #202020;
+
+  border-color: #777;
+}
+
+
+/* =========================
+   SCALE
+========================= */
+
+.scale-panel select {
+  width: 100%;
+
+  margin-top: 7px;
+
+  padding: 11px;
+
+  background: #111;
+
+  color: white;
+
+  border: 1px solid #444;
+}
+
+.scale-preview {
+  margin-top: 15px;
+
+  padding: 16px;
+
+  background: #111;
+
+  border: 1px solid #333;
+}
+
+.scale-preview-name {
+  font-size: 20px;
+
+  font-weight: bold;
+
+  margin-bottom: 12px;
+}
+
+.scale-notes {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+.scale-notes span,
+.child-scale-notes span {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 42px;
+
+  padding: 8px 10px;
+
+  background: #242424;
+
+  border: 1px solid #444;
+
+  border-radius: 3px;
+
+  font-weight: bold;
+}
+
+.scale-send-button {
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 14px;
+
+  background: #eee;
+
+  color: #111;
+
+  border: 0;
+
+  font-weight: bold;
+}
+
+.scale-send-button:hover {
+  background: white;
+}
+
+
+/* =========================
+   SCALE EDITOR
+========================= */
+
+.scale-editor {
+  margin-top: 20px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #333;
+}
+
+.scale-editor h3 {
+  margin-top: 0;
+}
+
+.scale-editor-buttons {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 8px;
+
+  margin-top: 10px;
+}
+
+.scale-editor-buttons button {
+  padding: 11px;
+
+  background: #222;
+
+  color: white;
+
+  border: 1px solid #444;
+}
+
+.danger-button {
+  width: 100%;
+
+  margin-top: 8px;
+
+  padding: 10px;
+
+  background: #181818;
+
+  color: #999;
+
+  border: 1px solid #333;
+}
+
+
+/* =========================
+   SCORE
+========================= */
+
+.score-button {
+  display: block;
+
+  width: 100%;
+
+  padding: 15px;
+
+  margin-bottom: 8px;
+
+  text-align: left;
+
+  background: #222;
+
+  color: white;
+
+  border: 1px solid #444;
+}
+
+.score-button:hover {
+  background: #292929;
+}
+
+.score-button.selected {
+  border-color: white;
+}
+
+label {
+  display: block;
+
+  margin: 12px 0;
+}
+
+input,
+textarea {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 6px;
+
+  padding: 10px;
+
+  background: #111;
+
+  color: white;
+
+  border: 1px solid #444;
+}
+
+textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+.panel > button {
+  background: #222;
+
+  color: white;
+
+  border: 1px solid #444;
+
+  padding: 10px 15px;
+}
+
+
+/* =========================
+   CHAT / TIMELINE
+========================= */
+
+#chat-log,
+#child-chat-log {
+  height: 280px;
+
+  overflow-y: auto;
+
+  padding: 10px;
+
+  background: #111;
+
+  border: 1px solid #333;
+}
+
+.timeline-item {
+  padding: 10px 8px;
+
+  margin-bottom: 6px;
+
+  border-left: 2px solid #777;
+
+  background: #181818;
+}
+
+.timeline-time {
+  font-size: 11px;
+
+  opacity: .45;
+}
+
+.timeline-target {
+  font-size: 12px;
+
+  margin-top: 3px;
+
+  opacity: .65;
+}
+
+.timeline-content {
+  margin-top: 5px;
+
+  font-weight: bold;
+}
+
+.chat-message {
+  display: flex;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  padding: 8px 4px;
+
+  border-bottom: 1px solid #222;
+}
+
+.chat-time {
+  font-size: 11px;
+
+  opacity: .4;
+}
+
+.chat-message strong {
+  color: #ddd;
+}
+
+.chat-input {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 8px;
+}
+
+.chat-input input {
+  flex: 1;
+
+  margin-top: 0;
+}
+
+.chat-input button {
+  padding: 0 18px;
+}
+
+
+/* =========================
+   CHILD
+========================= */
+
+.child-layout {
+  max-width: 800px;
+
+  margin: auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+.child-player-select-panel {
+  padding-bottom: 15px;
+}
+
+.child-section-label {
+  font-size: 11px;
+
+  letter-spacing: .2em;
+
+  opacity: .45;
+
+  margin-bottom: 8px;
+}
+
+.child-player-selector {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+.child-player-button {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 4px;
+
+  padding: 13px;
+
+  background: #222;
+
+  color: white;
+
+  border: 1px solid #444;
+}
+
+.child-player-button span {
+  font-size: 12px;
+
+  opacity: .5;
+}
+
+.child-player-button.selected {
+  border-color: white;
+
+  background: #2b2b2b;
+}
+
+
+/* =========================
+   PLAYER CARD
+========================= */
+
+.player-card {
+  text-align: center;
+
+  padding: 30px;
+}
+
+.player-instrument {
+  font-size: 18px;
+
+  opacity: .6;
+}
+
+.instruction-display {
+  margin-top: 20px;
+
+  min-height: 220px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #181818;
+
+  border: 1px solid #444;
+
+  font-size: 64px;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   CHILD INSTRUCTION HISTORY
+========================= */
+
+.child-instruction-log {
+  max-height: 220px;
+
+  overflow-y: auto;
+}
+
+.instruction-history-item {
+  display: grid;
+
+  grid-template-columns:
+    auto auto 1fr;
+
+  gap: 10px;
+
+  align-items: center;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #292929;
+}
+
+.history-time {
+  font-size: 11px;
+
+  opacity: .45;
+}
+
+.history-target {
+  font-size: 12px;
+
+  opacity: .6;
+}
+
+
+/* =========================
+   CHILD SCALE
+========================= */
+
+.child-scale-panel {
+  text-align: center;
+
+  padding: 24px;
+}
+
+.child-scale-name {
+  font-size: 28px;
+
+  font-weight: bold;
+
+  margin-bottom: 18px;
+}
+
+.child-scale-notes {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 8px;
+}
+
+
+/* =========================
+   CHILD SCORE
+========================= */
+
+.score-display {
+  white-space: pre-wrap;
+
+  line-height: 1.7;
+
+  font-size: 18px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .screen {
+    padding: 12px;
+  }
+
+  #role-screen h1 {
+    font-size: 48px;
+  }
+
+  .role-buttons {
+    width: 100%;
+  }
+
+  .role-button {
+    flex: 1;
+
+    width: auto;
+
+    height: 140px;
+  }
+
+  .parent-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .player-item {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto
+      auto;
+  }
+
+  .instruction-display {
+    min-height: 180px;
+
+    font-size: 48px;
+  }
+
+  .child-player-selector {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .instruction-history-item {
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 5px;
+  }
+
+  .instruction-history-item strong {
+    grid-column: 1 / -1;
+  }
+
+  .scale-editor-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-input {
+    flex-direction: row;
+  }
+
+}
+
+/* =========================
+   CHAT HEADER
+========================= */
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chat-header h2 {
+  margin: 0;
+}
+
+.chat-reset-button {
+  padding: 8px 12px;
+
+  background: #222;
+  color: #aaa;
+
+  border: 1px solid #444;
+
+  cursor: pointer;
+
+  font-size: 12px;
+}
+
+.chat-reset-button:hover {
+  color: white;
+  border-color: #777;
+}
+
+.chat-reset-button:active {
+  transform: scale(.97);
+}
+
+window.resetChat = resetChat;
