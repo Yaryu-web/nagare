@@ -1578,7 +1578,7 @@ function resetChat() {
   }
 
   const chatRef =
-    ref(db, "chat");
+    ref(db, "yaryu/chat");
 
   remove(chatRef)
     .then(() => {
