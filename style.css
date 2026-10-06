@@ -899,3 +899,5 @@ textarea {
 .chat-reset-button:active {
   transform: scale(.97);
 }
+
+window.resetChat = resetChat;
