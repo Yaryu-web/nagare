@@ -11,35 +11,43 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-// =====================================================
-// FIREBASE
-// =====================================================
-
 const firebaseConfig = {
+
   apiKey: "AIzaSyBvmH9nJXVq_Ys0CDGafHwo0zGP64S-KKY",
-  authDomain: "yaryu-live-control.firebaseapp.com",
-  projectId: "yaryu-live-control",
-  storageBucket: "yaryu-live-control.firebasestorage.app",
-  messagingSenderId: "364112884906",
-  appId: "1:364112884906:web:a30198670caa2f2d344cd3",
-  measurementId: "G-WVR9BGQ9XL"
+
+  authDomain:
+    "yaryu-live-control.firebaseapp.com",
+
+  projectId:
+    "yaryu-live-control",
+
+  storageBucket:
+    "yaryu-live-control.firebasestorage.app",
+
+  messagingSenderId:
+    "364112884906",
+
+  appId:
+    "1:364112884906:web:a30198670caa2f2d344cd3",
+
+  measurementId:
+    "G-WVR9BGQ9XL"
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
 
-const db = getDatabase(firebaseApp);
+const firebaseApp =
+  initializeApp(firebaseConfig);
+
+const db =
+  getDatabase(firebaseApp);
+
+const roomRef =
+  ref(db, "yaryu");
 
 
-// =====================================================
-// DATABASE ROOT
-// =====================================================
-
-const roomRef = ref(db, "yaryu");
-
-
-// =====================================================
-// LOCAL STATE
-// =====================================================
+/* =========================
+   STATE
+========================= */
 
 let players = {};
 
@@ -53,10 +61,14 @@ let childPlayer = null;
 
 let currentScale = null;
 
+let currentScore = null;
 
-// =====================================================
-// DEFAULT DATA
-// =====================================================
+let savedScales = {};
+
+
+/* =========================
+   DEFAULT PLAYERS
+========================= */
 
 const defaultPlayers = {
 
@@ -83,6 +95,10 @@ const defaultPlayers = {
 };
 
 
+/* =========================
+   DEFAULT SCORES
+========================= */
+
 const defaultScores = {
 
   1: {
@@ -103,207 +119,131 @@ const defaultScores = {
 };
 
 
-// =====================================================
-// SCALE DATA
-// =====================================================
+/* =========================
+   DEFAULT SCALES
+========================= */
 
 const scales = {
 
   Western: {
 
-    "F Major": [
-      "F",
-      "G",
-      "A",
-      "Bb",
-      "C",
-      "D",
-      "E"
-    ],
+    "F Major":
+      ["F","G","A","Bb","C","D","E"],
 
-    "Ab Major": [
-      "Ab",
-      "Bb",
-      "C",
-      "Db",
-      "Eb",
-      "F",
-      "G"
-    ],
+    "Ab Major":
+      ["Ab","Bb","C","Db","Eb","F","G"],
 
-    "C# Major": [
-      "C#",
-      "D#",
-      "E#",
-      "F#",
-      "G#",
-      "A#",
-      "B#"
-    ],
+    "C# Major":
+      ["C#","D#","E#","F#","G#","A#","B#"],
 
-    "C Dorian": [
-      "C",
-      "D",
-      "Eb",
-      "F",
-      "G",
-      "A",
-      "Bb"
-    ],
+    "C Dorian":
+      ["C","D","Eb","F","G","A","Bb"],
 
-    "A Minor": [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E",
-      "F",
-      "G"
-    ],
+    "A Minor":
+      ["A","B","C","D","E","F","G"],
 
-    "D Dorian": [
-      "D",
-      "E",
-      "F",
-      "G",
-      "A",
-      "B",
-      "C"
-    ],
+    "D Dorian":
+      ["D","E","F","G","A","B","C"],
 
-    "E Phrygian": [
-      "E",
-      "F",
-      "G",
-      "A",
-      "B",
-      "C",
-      "D"
-    ]
+    "E Phrygian":
+      ["E","F","G","A","B","C","D"]
 
   },
 
 
   Japanese: {
 
-    "平調子": [
-      "C",
-      "Db",
-      "F",
-      "G",
-      "Ab"
-    ],
+    "平調子":
+      ["C","Db","F","G","Ab"],
 
-    "陰旋法": [
-      "A",
-      "B",
-      "C",
-      "E",
-      "F"
-    ],
+    "陰旋法":
+      ["A","B","C","E","F"],
 
-    "陽旋法": [
-      "C",
-      "D",
-      "E",
-      "G",
-      "A"
-    ]
+    "陽旋法":
+      ["C","D","E","G","A"]
 
   },
 
 
   World: {
 
-    "Spanish": [
-      "E",
-      "F",
-      "G#",
-      "A",
-      "B",
-      "C",
-      "D"
-    ],
+    "Spanish":
+      ["E","F","G#","A","B","C","D"],
 
-    "Hirajoshi": [
-      "C",
-      "Db",
-      "F",
-      "G",
-      "Ab"
-    ],
+    "Hirajoshi":
+      ["C","Db","F","G","Ab"],
 
-    "Pelog": [
-      "C",
-      "Db",
-      "Eb",
-      "G",
-      "Ab"
-    ]
+    "Pelog":
+      ["C","Db","Eb","G","Ab"]
 
   },
 
 
   Favorite: {
 
-    "F Maj": [
-      "F",
-      "G",
-      "A",
-      "Bb",
-      "C",
-      "D",
-      "E"
-    ],
+    "F Maj":
+      ["F","G","A","Bb","C","D","E"],
 
-    "Ab Major": [
-      "Ab",
-      "Bb",
-      "C",
-      "Db",
-      "Eb",
-      "F",
-      "G"
-    ],
+    "Ab Major":
+      ["Ab","Bb","C","Db","Eb","F","G"],
 
-    "C# Panta": [
-      "C#",
-      "E",
-      "F#",
-      "G#",
-      "B"
-    ],
+    "C# Panta":
+      ["C#","E","F#","G#","B"],
 
-    "C Dorian": [
-      "C",
-      "D",
-      "Eb",
-      "F",
-      "G",
-      "A",
-      "Bb"
-    ]
+    "C Dorian":
+      ["C","D","Eb","F","G","A","Bb"],
+
+    "C Minor Blues":
+      ["C","Eb","F","Gb","G","Bb"]
 
   },
 
 
   Custom: {
 
-    "Custom 01": [
-      "C",
-      "Db",
-      "E",
-      "F#"
-    ]
+    "Custom 01":
+      ["C","Db","E","F#"]
 
   }
 
 };
 
 
-// =====================================================
-// INITIALIZE DATABASE
-// =====================================================
+/* =========================
+   COMBINE SCALES
+========================= */
+
+function allScales() {
+
+  const result =
+    JSON.parse(
+      JSON.stringify(scales)
+    );
+
+
+  Object.values(savedScales)
+    .forEach(scale => {
+
+      if (!result[scale.category]) {
+
+        result[scale.category] = {};
+
+      }
+
+      result[scale.category][scale.name] =
+        scale.notes;
+
+    });
+
+
+  return result;
+
+}
+
+
+/* =========================
+   DATABASE
+========================= */
 
 async function initializeDatabase() {
 
@@ -311,59 +251,127 @@ async function initializeDatabase() {
     roomRef,
     snapshot => {
 
-      const data = snapshot.val();
+      const data =
+        snapshot.val();
+
 
       if (!data) {
 
-        set(roomRef, {
+        set(
+          roomRef,
+          {
 
-          players: defaultPlayers,
+            players:
+              defaultPlayers,
 
-          scores: defaultScores,
+            scores:
+              defaultScores,
 
-          scale: {
-            category: "Favorite",
-            name: "F Maj",
-            notes: scales.Favorite["F Maj"]
-          },
+            currentScore: {
 
-          instructions: {},
+              id: 1,
 
-          chat: {}
+              title:
+                defaultScores[1].title,
 
-        });
+              content:
+                defaultScores[1].content,
+
+              timestamp:
+                Date.now()
+
+            },
+
+            scale: {
+
+              category:
+                "Favorite",
+
+              name:
+                "F Maj",
+
+              notes:
+                scales.Favorite["F Maj"],
+
+              timestamp:
+                Date.now()
+
+            },
+
+            scales: {},
+
+            instructions: {},
+
+            chat: {}
+
+          }
+        );
 
         return;
 
       }
 
+
       players =
         data.players ||
         defaultPlayers;
+
 
       scores =
         data.scores ||
         defaultScores;
 
+
+      savedScales =
+        data.scales ||
+        {};
+
+
       currentScale =
         data.scale ||
         {
-          category: "Favorite",
-          name: "F Maj",
-          notes: scales.Favorite["F Maj"]
+
+          category:
+            "Favorite",
+
+          name:
+            "F Maj",
+
+          notes:
+            scales.Favorite["F Maj"]
+
         };
+
+
+      currentScore =
+        data.currentScore ||
+        {
+
+          id: 1,
+
+          title:
+            scores[1]?.title ||
+            "SCORE 01",
+
+          content:
+            scores[1]?.content ||
+            "全員で演奏"
+
+        };
+
 
       renderEverything();
 
     }
+
   );
 
 }
 
 
-// =====================================================
-// SCREEN
-// =====================================================
+/* =========================
+   SCREEN
+========================= */
 
 function showScreen(id) {
 
@@ -375,8 +383,10 @@ function showScreen(id) {
 
     });
 
+
   const target =
     document.getElementById(id);
+
 
   if (target) {
 
@@ -387,38 +397,43 @@ function showScreen(id) {
 }
 
 
-// =====================================================
-// ROLE
-// =====================================================
+window.enterParent =
+  function () {
 
-window.enterParent = function () {
+    showScreen(
+      "parent-screen"
+    );
 
-  showScreen("parent-screen");
+    renderParent();
 
-  renderParent();
-
-};
-
-
-window.enterChild = function () {
-
-  showScreen("child-screen");
-
-  renderChild();
-
-};
+  };
 
 
-window.backToRole = function () {
+window.enterChild =
+  function () {
 
-  showScreen("role-screen");
+    showScreen(
+      "child-screen"
+    );
 
-};
+    renderChild();
+
+  };
 
 
-// =====================================================
-// RENDER EVERYTHING
-// =====================================================
+window.backToRole =
+  function () {
+
+    showScreen(
+      "role-screen"
+    );
+
+  };
+
+
+/* =========================
+   RENDER EVERYTHING
+========================= */
 
 function renderEverything() {
 
@@ -431,9 +446,9 @@ function renderEverything() {
 }
 
 
-// =====================================================
-// PARENT
-// =====================================================
+/* =========================
+   PARENT
+========================= */
 
 function renderParent() {
 
@@ -441,11 +456,8 @@ function renderParent() {
     !document.getElementById(
       "parent-screen"
     )
-  ) {
+  ) return;
 
-    return;
-
-  }
 
   renderPlayers();
 
@@ -457,14 +469,18 @@ function renderParent() {
 
   renderParentScale();
 
+  renderScaleEditor();
+
   renderChat();
+
+  renderCurrentScore();
 
 }
 
 
-// =====================================================
-// PLAYERS
-// =====================================================
+/* =========================
+   PLAYERS
+========================= */
 
 function renderPlayers() {
 
@@ -473,194 +489,206 @@ function renderPlayers() {
       "parent-players"
     );
 
+
   if (!container) return;
+
 
   container.innerHTML = "";
 
 
   Object.entries(players)
-    .forEach(([id, player]) => {
+    .forEach(
+      ([id, player]) => {
 
-      const wrapper =
-        document.createElement("div");
-
-      wrapper.className =
-        "player-entry";
-
-
-      const button =
-        document.createElement("button");
-
-      button.className =
-        "player-button";
-
-
-      if (selectedPlayer === id) {
-
-        button.classList.add(
-          "selected"
-        );
-
-      }
-
-
-      button.innerHTML = `
-        <div class="player-name">
-          ${player.name}
-        </div>
-
-        <div class="player-instrument-small">
-          ${player.instrument}
-        </div>
-      `;
-
-
-      button.onclick = () => {
-
-        selectedPlayer = id;
-
-        const selected =
-          document.getElementById(
-            "selected-player"
+        const wrapper =
+          document.createElement(
+            "div"
           );
 
-        if (selected) {
+        wrapper.className =
+          "player-entry";
 
-          selected.textContent =
-            `${player.name} / ${player.instrument}`;
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.className =
+          "player-button";
+
+
+        if (
+          selectedPlayer === id
+        ) {
+
+          button.classList.add(
+            "selected"
+          );
 
         }
 
-        renderPlayers();
 
-      };
+        button.innerHTML = `
 
+          <div class="player-name">
+            ${player.name}
+          </div>
 
-      wrapper.appendChild(button);
+          <div class="player-instrument-small">
+            ${player.instrument}
+          </div>
 
-
-      // 編集
-
-      const editButton =
-        document.createElement("button");
-
-      editButton.textContent =
-        "編集";
-
-      editButton.onclick = () => {
-
-        editPlayer(id);
-
-      };
+        `;
 
 
-      wrapper.appendChild(
-        editButton
-      );
+        button.onclick =
+          () => {
+
+            selectedPlayer = id;
+
+            const selected =
+              document.getElementById(
+                "selected-player"
+              );
+
+            if (selected) {
+
+              selected.textContent =
+                `${player.name} / ${player.instrument}`;
+
+            }
+
+            renderPlayers();
+
+          };
 
 
-      // 削除
-
-      const deleteButton =
-        document.createElement("button");
-
-      deleteButton.textContent =
-        "削除";
-
-      deleteButton.onclick = () => {
-
-        deletePlayer(id);
-
-      };
+        wrapper.appendChild(
+          button
+        );
 
 
-      wrapper.appendChild(
-        deleteButton
-      );
+        const editButton =
+          document.createElement(
+            "button"
+          );
+
+        editButton.textContent =
+          "編集";
+
+        editButton.onclick =
+          () => editPlayer(id);
+
+        wrapper.appendChild(
+          editButton
+        );
 
 
-      container.appendChild(
-        wrapper
-      );
+        const deleteButton =
+          document.createElement(
+            "button"
+          );
 
-    });
+        deleteButton.textContent =
+          "削除";
+
+        deleteButton.onclick =
+          () => deletePlayer(id);
+
+        wrapper.appendChild(
+          deleteButton
+        );
+
+
+        container.appendChild(
+          wrapper
+        );
+
+      }
+    );
 
 }
 
 
-// =====================================================
-// ADD PLAYER
-// =====================================================
+/* =========================
+   ADD PLAYER
+========================= */
 
-window.addPlayer = async function () {
+window.addPlayer =
+  async function () {
 
-  const name =
-    prompt(
-      "演奏者名を入力してください",
-      "E"
-    );
-
-  if (!name) return;
-
-
-  const instrument =
-    prompt(
-      "楽器名を入力してください",
-      "楽器"
-    );
-
-  if (!instrument) return;
-
-
-  const ids =
-    Object.keys(players);
-
-
-  let nextLetter =
-    "A";
-
-
-  for (
-    let i = 0;
-    i < 26;
-    i++
-  ) {
-
-    const candidate =
-      String.fromCharCode(
-        65 + i
+    const name =
+      prompt(
+        "演奏者名を入力してください",
+        "E"
       );
 
+    if (!name) return;
 
-    if (!ids.includes(candidate)) {
 
-      nextLetter =
-        candidate;
+    const instrument =
+      prompt(
+        "楽器名を入力してください",
+        "楽器"
+      );
 
-      break;
+    if (!instrument) return;
+
+
+    const ids =
+      Object.keys(players);
+
+
+    let nextLetter = "A";
+
+
+    for (
+      let i = 0;
+      i < 26;
+      i++
+    ) {
+
+      const candidate =
+        String.fromCharCode(
+          65 + i
+        );
+
+
+      if (
+        !ids.includes(candidate)
+      ) {
+
+        nextLetter =
+          candidate;
+
+        break;
+
+      }
 
     }
 
-  }
+
+    await set(
+      ref(
+        db,
+        `yaryu/players/${nextLetter}`
+      ),
+      {
+
+        name,
+
+        instrument
+
+      }
+    );
+
+  };
 
 
-  await set(
-    ref(
-      db,
-      `yaryu/players/${nextLetter}`
-    ),
-    {
-      name: name,
-      instrument: instrument
-    }
-  );
-
-};
-
-
-// =====================================================
-// EDIT PLAYER
-// =====================================================
+/* =========================
+   EDIT PLAYER
+========================= */
 
 async function editPlayer(id) {
 
@@ -694,17 +722,20 @@ async function editPlayer(id) {
       `yaryu/players/${id}`
     ),
     {
-      name: name,
-      instrument: instrument
+
+      name,
+
+      instrument
+
     }
   );
 
 }
 
 
-// =====================================================
-// DELETE PLAYER
-// =====================================================
+/* =========================
+   DELETE PLAYER
+========================= */
 
 async function deletePlayer(id) {
 
@@ -712,13 +743,11 @@ async function deletePlayer(id) {
     players[id];
 
 
-  const ok =
-    confirm(
+  if (
+    !confirm(
       `${player.name} / ${player.instrument} を削除しますか？`
-    );
-
-
-  if (!ok) return;
+    )
+  ) return;
 
 
   await remove(
@@ -729,14 +758,18 @@ async function deletePlayer(id) {
   );
 
 
-  if (selectedPlayer === id) {
+  if (
+    selectedPlayer === id
+  ) {
 
     selectedPlayer = null;
 
   }
 
 
-  if (childPlayer === id) {
+  if (
+    childPlayer === id
+  ) {
 
     childPlayer = null;
 
@@ -745,9 +778,9 @@ async function deletePlayer(id) {
 }
 
 
-// =====================================================
-// SCORE LIST
-// =====================================================
+/* =========================
+   SCORES
+========================= */
 
 function renderScores() {
 
@@ -756,6 +789,7 @@ function renderScores() {
       "score-list"
     );
 
+
   if (!container) return;
 
 
@@ -763,61 +797,68 @@ function renderScores() {
 
 
   Object.entries(scores)
-    .forEach(([id, score]) => {
+    .forEach(
+      ([id, score]) => {
 
-      const button =
-        document.createElement("button");
+        const button =
+          document.createElement(
+            "button"
+          );
 
 
-      button.className =
-        "score-button";
+        button.className =
+          "score-button";
 
 
-      if (
-        Number(id) ===
-        Number(selectedScore)
-      ) {
+        if (
+          Number(id) ===
+          Number(selectedScore)
+        ) {
 
-        button.classList.add(
-          "selected"
+          button.classList.add(
+            "selected"
+          );
+
+        }
+
+
+        button.innerHTML = `
+
+          <strong>
+            ${score.title}
+          </strong>
+
+          <br>
+
+          ${score.content}
+
+        `;
+
+
+        button.onclick =
+          () => {
+
+            selectedScore =
+              Number(id);
+
+            renderParent();
+
+          };
+
+
+        container.appendChild(
+          button
         );
 
       }
-
-
-      button.innerHTML = `
-        <strong>
-          ${score.title}
-        </strong>
-
-        <br>
-
-        ${score.content}
-      `;
-
-
-      button.onclick = () => {
-
-        selectedScore =
-          Number(id);
-
-        renderParent();
-
-      };
-
-
-      container.appendChild(
-        button
-      );
-
-    });
+    );
 
 }
 
 
-// =====================================================
-// SCORE EDITOR
-// =====================================================
+/* =========================
+   SCORE EDITOR
+========================= */
 
 function renderEditor() {
 
@@ -858,93 +899,230 @@ function renderEditor() {
 }
 
 
-// =====================================================
-// SAVE SCORE
-// =====================================================
+/* =========================
+   SAVE SCORE
+========================= */
 
-window.saveScore = async function () {
+window.saveScore =
+  async function () {
+
+    const title =
+      document.getElementById(
+        "score-title"
+      );
+
+
+    const content =
+      document.getElementById(
+        "score-content"
+      );
+
+
+    if (
+      !title ||
+      !content
+    ) return;
+
+
+    await update(
+      ref(
+        db,
+        `yaryu/scores/${selectedScore}`
+      ),
+      {
+
+        title:
+          title.value,
+
+        content:
+          content.value
+
+      }
+    );
+
+  };
+
+
+/* =========================
+   SEND SCORE TO EVERYONE
+========================= */
+
+window.sendScore =
+  async function () {
+
+    const score =
+      scores[selectedScore];
+
+
+    if (!score) return;
+
+
+    currentScore = {
+
+      id:
+        Number(selectedScore),
+
+      title:
+        score.title,
+
+      content:
+        score.content,
+
+      timestamp:
+        Date.now()
+
+    };
+
+
+    await set(
+      ref(
+        db,
+        "yaryu/currentScore"
+      ),
+      currentScore
+    );
+
+  };
+
+
+/* =========================
+   CURRENT SCORE
+========================= */
+
+function renderCurrentScore() {
 
   const title =
     document.getElementById(
-      "score-title"
+      "parent-current-score-title"
     );
 
 
   const content =
     document.getElementById(
-      "score-content"
+      "parent-current-score-content"
     );
 
 
-  if (!title || !content) return;
+  if (
+    !title ||
+    !content
+  ) return;
 
 
-  await update(
-    ref(
-      db,
-      `yaryu/scores/${selectedScore}`
-    ),
-    {
-      title:
-        title.value,
+  if (!currentScore) {
 
-      content:
-        content.value
-    }
-  );
+    title.textContent =
+      "—";
 
-};
-
-
-// =====================================================
-// INSTRUCTION
-// =====================================================
-
-window.sendInstruction =
-async function (instruction) {
-
-  if (!selectedPlayer) {
-
-    alert(
-      "演奏者を選択してください"
-    );
+    content.textContent =
+      "スコア未送信";
 
     return;
 
   }
 
 
-  const instructionRef =
-    push(
-      ref(
-        db,
-        "yaryu/instructions"
-      )
+  title.textContent =
+    currentScore.title;
+
+
+  content.textContent =
+    currentScore.content;
+
+}
+
+
+function renderChildScore() {
+
+  const title =
+    document.getElementById(
+      "child-score-title"
     );
 
 
-  await set(
-    instructionRef,
-    {
+  const content =
+    document.getElementById(
+      "child-score-content"
+    );
 
-      target:
-        selectedPlayer,
 
-      instruction:
-        instruction,
+  if (
+    !title ||
+    !content
+  ) return;
 
-      timestamp:
-        Date.now()
+
+  if (!currentScore) {
+
+    title.textContent =
+      "SCORE";
+
+    content.textContent =
+      "スコア未送信";
+
+    return;
+
+  }
+
+
+  title.textContent =
+    currentScore.title;
+
+
+  content.textContent =
+    currentScore.content;
+
+}
+
+
+/* =========================
+   INSTRUCTIONS
+========================= */
+
+window.sendInstruction =
+  async function (instruction) {
+
+    if (!selectedPlayer) {
+
+      alert(
+        "演奏者を選択してください"
+      );
+
+      return;
 
     }
-  );
-
-};
 
 
-// =====================================================
-// CHILD PLAYER SELECTOR
-// =====================================================
+    const instructionRef =
+      push(
+        ref(
+          db,
+          "yaryu/instructions"
+        )
+      );
+
+
+    await set(
+      instructionRef,
+      {
+
+        target:
+          selectedPlayer,
+
+        instruction,
+
+        timestamp:
+          Date.now()
+
+      }
+    );
+
+  };
+
+
+/* =========================
+   CHILD PLAYER
+========================= */
 
 function renderChildPlayerSelector() {
 
@@ -953,6 +1131,7 @@ function renderChildPlayerSelector() {
       "child-player-selector"
     );
 
+
   if (!container) return;
 
 
@@ -960,59 +1139,63 @@ function renderChildPlayerSelector() {
 
 
   Object.entries(players)
-    .forEach(([id, player]) => {
+    .forEach(
+      ([id, player]) => {
 
-      const button =
-        document.createElement("button");
+        const button =
+          document.createElement(
+            "button"
+          );
 
 
-      button.className =
-        "player-button";
+        button.className =
+          "player-button";
 
 
-      if (
-        childPlayer === id
-      ) {
+        if (
+          childPlayer === id
+        ) {
 
-        button.classList.add(
-          "selected"
+          button.classList.add(
+            "selected"
+          );
+
+        }
+
+
+        button.innerHTML = `
+
+          <div class="player-name">
+            ${player.name}
+          </div>
+
+          <div class="player-instrument-small">
+            ${player.instrument}
+          </div>
+
+        `;
+
+
+        button.onclick =
+          () => {
+
+            childPlayer =
+              id;
+
+            renderChild();
+
+          };
+
+
+        container.appendChild(
+          button
         );
 
       }
-
-
-      button.innerHTML = `
-        <div class="player-name">
-          ${player.name}
-        </div>
-
-        <div class="player-instrument-small">
-          ${player.instrument}
-        </div>
-      `;
-
-
-      button.onclick = () => {
-
-        childPlayer =
-          id;
-
-        renderChild();
-
-      };
-
-
-      container.appendChild(
-        button
-      );
-
-    });
+    );
 
 }
 
-// =====================================================
-// CHILD
-// =====================================================
 
 function renderChild() {
 
@@ -1029,10 +1212,6 @@ function renderChild() {
 }
 
 
-// =====================================================
-// CHILD PLAYER
-// =====================================================
-
 function renderChildPlayer() {
 
   const instrument =
@@ -1047,7 +1226,10 @@ function renderChildPlayer() {
     );
 
 
-  if (!instrument) return;
+  if (
+    !instrument ||
+    !instruction
+  ) return;
 
 
   if (!childPlayer) {
@@ -1101,7 +1283,7 @@ function renderChildPlayer() {
               childPlayer
           )
           .sort(
-            (a, b) =>
+            (a,b) =>
               b.timestamp -
               a.timestamp
           );
@@ -1115,7 +1297,7 @@ function renderChildPlayer() {
               "ALL"
           )
           .sort(
-            (a, b) =>
+            (a,b) =>
               b.timestamp -
               a.timestamp
           );
@@ -1126,68 +1308,57 @@ function renderChildPlayer() {
         global[0];
 
 
-      if (latest) {
-
-        instruction.textContent =
-          latest.instruction;
-
-      } else {
-
-        instruction.textContent =
-          "WAIT";
-
-      }
+      instruction.textContent =
+        latest
+          ? latest.instruction
+          : "WAIT";
 
 
       renderChildChat();
 
-    },
-    {
-      onlyOnce: false
     }
   );
 
 }
 
 
-// =====================================================
-// SEND GLOBAL INSTRUCTION
-// =====================================================
+/* =========================
+   GLOBAL INSTRUCTION
+========================= */
 
 window.sendGlobalInstruction =
-async function (instruction) {
+  async function (instruction) {
 
-  const instructionRef =
-    push(
-      ref(
-        db,
-        "yaryu/instructions"
-      )
-    );
+    const instructionRef =
+      push(
+        ref(
+          db,
+          "yaryu/instructions"
+        )
+      );
 
 
-  await set(
-    instructionRef,
-    {
+    await set(
+      instructionRef,
+      {
 
-      target:
-        "ALL",
+        target:
+          "ALL",
 
-      instruction:
         instruction,
 
-      timestamp:
-        Date.now()
+        timestamp:
+          Date.now()
 
-    }
-  );
+      }
+    );
 
-};
+  };
 
 
-// =====================================================
-// SCALE SELECTOR
-// =====================================================
+/* =========================
+   SCALE SELECTOR
+========================= */
 
 function renderScaleSelector() {
 
@@ -1200,10 +1371,17 @@ function renderScaleSelector() {
   if (!select) return;
 
 
-  select.innerHTML = "";
+  const scaleData =
+    allScales();
 
 
-  Object.entries(scales)
+  select.innerHTML =
+    "";
+
+
+  Object.entries(
+    scaleData
+  )
     .forEach(
       ([category, scaleList]) => {
 
@@ -1217,42 +1395,46 @@ function renderScaleSelector() {
           category;
 
 
-        Object.keys(scaleList)
-          .forEach(name => {
+        Object.keys(
+          scaleList
+        )
+          .forEach(
+            name => {
 
-            const option =
-              document.createElement(
-                "option"
+              const option =
+                document.createElement(
+                  "option"
+                );
+
+
+              option.value =
+                `${category}::${name}`;
+
+
+              option.textContent =
+                name;
+
+
+              if (
+                currentScale &&
+                currentScale.category ===
+                  category &&
+                currentScale.name ===
+                  name
+              ) {
+
+                option.selected =
+                  true;
+
+              }
+
+
+              group.appendChild(
+                option
               );
 
-
-            option.value =
-              `${category}::${name}`;
-
-
-            option.textContent =
-              name;
-
-
-            if (
-              currentScale &&
-              currentScale.category ===
-                category &&
-              currentScale.name ===
-                name
-            ) {
-
-              option.selected =
-                true;
-
             }
-
-
-            group.appendChild(
-              option
-            );
-
-          });
+          );
 
 
         select.appendChild(
@@ -1272,17 +1454,68 @@ function renderScaleSelector() {
 }
 
 
-// =====================================================
-// SCALE PREVIEW
-// =====================================================
+/* =========================
+   GET SELECTED SCALE
+========================= */
 
-function renderSelectedScalePreview() {
+function getSelectedScale() {
 
   const select =
     document.getElementById(
       "scale-select"
     );
 
+
+  if (
+    !select ||
+    !select.value
+  ) return null;
+
+
+  const [
+    category,
+    ...nameParts
+  ] =
+    select.value.split("::");
+
+
+  const name =
+    nameParts.join("::");
+
+
+  const scaleData =
+    allScales();
+
+
+  if (
+    !scaleData[category] ||
+    !scaleData[category][name]
+  ) {
+
+    return null;
+
+  }
+
+
+  return {
+
+    category,
+
+    name,
+
+    notes:
+      scaleData[category][name]
+
+  };
+
+}
+
+
+/* =========================
+   SCALE PREVIEW
+========================= */
+
+function renderSelectedScalePreview() {
 
   const preview =
     document.getElementById(
@@ -1290,45 +1523,24 @@ function renderSelectedScalePreview() {
     );
 
 
-  if (!select || !preview)
-    return;
+  const selected =
+    getSelectedScale();
 
 
-  const value =
-    select.value;
-
-
-  if (!value) return;
-
-
-  const parts =
-    value.split("::");
-
-
-  const category =
-    parts[0];
-
-
-  const name =
-    parts[1];
-
-
-  const notes =
-    scales[
-      category
-    ][
-      name
-    ];
+  if (
+    !preview ||
+    !selected
+  ) return;
 
 
   preview.innerHTML = `
 
     <div class="scale-name">
-      ${name}
+      ${selected.name}
     </div>
 
     <div class="scale-notes">
-      ${notes.join(" · ")}
+      ${selected.notes.join(" · ")}
     </div>
 
   `;
@@ -1336,70 +1548,44 @@ function renderSelectedScalePreview() {
 }
 
 
-// =====================================================
-// SEND SCALE
-// =====================================================
+/* =========================
+   SEND SCALE
+========================= */
 
 window.sendScale =
-async function () {
+  async function () {
 
-  const select =
-    document.getElementById(
-      "scale-select"
-    );
+    const selected =
+      getSelectedScale();
 
 
-  if (!select) return;
+    if (!selected) return;
 
 
-  const parts =
-    select.value.split("::");
+    currentScale = {
 
-
-  const category =
-    parts[0];
-
-
-  const name =
-    parts[1];
-
-
-  const notes =
-    scales[
-      category
-    ][
-      name
-    ];
-
-
-  await set(
-    ref(
-      db,
-      "yaryu/scale"
-    ),
-    {
-
-      category:
-        category,
-
-      name:
-        name,
-
-      notes:
-        notes,
+      ...selected,
 
       timestamp:
         Date.now()
 
-    }
-  );
-
-};
+    };
 
 
-// =====================================================
-// PARENT SCALE
-// =====================================================
+    await set(
+      ref(
+        db,
+        "yaryu/scale"
+      ),
+      currentScale
+    );
+
+  };
+
+
+/* =========================
+   PARENT SCALE
+========================= */
 
 function renderParentScale() {
 
@@ -1409,8 +1595,10 @@ function renderParentScale() {
     );
 
 
-  if (!preview || !currentScale)
-    return;
+  if (
+    !preview ||
+    !currentScale
+  ) return;
 
 
   preview.innerHTML = `
@@ -1428,9 +1616,9 @@ function renderParentScale() {
 }
 
 
-// =====================================================
-// CHILD SCALE
-// =====================================================
+/* =========================
+   CHILD SCALE
+========================= */
 
 function renderChildScale() {
 
@@ -1446,8 +1634,10 @@ function renderChildScale() {
     );
 
 
-  if (!name || !notes)
-    return;
+  if (
+    !name ||
+    !notes
+  ) return;
 
 
   if (!currentScale) {
@@ -1456,7 +1646,7 @@ function renderChildScale() {
       "—";
 
     notes.textContent =
-      "—";
+      "スケール未指定";
 
     return;
 
@@ -1474,245 +1664,612 @@ function renderChildScale() {
 
 }
 
-// =========================
-// LIVE RESET
-// =========================
 
-function resetLive() {
+/* =========================
+   SCALE EDITOR
+========================= */
+
+function renderScaleEditor() {
+
+  const select =
+    document.getElementById(
+      "scale-edit-select"
+    );
+
+
+  const categoryInput =
+    document.getElementById(
+      "scale-edit-category"
+    );
+
+
+  const nameInput =
+    document.getElementById(
+      "scale-edit-name"
+    );
+
+
+  const notesInput =
+    document.getElementById(
+      "scale-edit-notes"
+    );
+
 
   if (
-    !confirm(
-      "このライブのチャットと指示をすべて消去しますか？"
-    )
-  ) {
-    return;
+    !select ||
+    !categoryInput ||
+    !nameInput ||
+    !notesInput
+  ) return;
+
+
+  const scaleData =
+    allScales();
+
+
+  select.innerHTML =
+    "";
+
+
+  Object.entries(
+    scaleData
+  )
+    .forEach(
+      ([category, scaleList]) => {
+
+        Object.entries(
+          scaleList
+        )
+          .forEach(
+            ([name]) => {
+
+              const option =
+                document.createElement(
+                  "option"
+                );
+
+
+              option.value =
+                `${category}::${name}`;
+
+
+              option.textContent =
+                `${category} / ${name}`;
+
+
+              select.appendChild(
+                option
+              );
+
+            }
+          );
+
+      }
+    );
+
+
+  const currentValue =
+    currentScale
+      ? `${currentScale.category}::${currentScale.name}`
+      : select.options[0]?.value;
+
+
+  if (currentValue) {
+
+    select.value =
+      currentValue;
+
   }
 
-  // チャットを消去
-  chatMessages = [];
 
-  // 全演奏者の指示を WAIT に戻す
-  Object.keys(players).forEach(id => {
+  const loadSelected =
+    () => {
 
-    playerInstructions[id] = "WAIT";
+      const [
+        category,
+        ...nameParts
+      ] =
+        select.value.split("::");
 
-  });
 
-  // 画面を更新
-  renderParent();
-  renderChild();
+      const name =
+        nameParts.join("::");
+
+
+      const data =
+        allScales();
+
+
+      if (
+        !data[category] ||
+        !data[category][name]
+      ) return;
+
+
+      categoryInput.value =
+        category;
+
+
+      nameInput.value =
+        name;
+
+
+      notesInput.value =
+        data[category][name].join(
+          " "
+        );
+
+    };
+
+
+  select.onchange =
+    loadSelected;
+
+
+  loadSelected();
 
 }
 
-// =====================================================
-// CHAT
-// =====================================================
 
-window.sendParentChat =
-async function () {
+/* =========================
+   NEW SCALE
+========================= */
 
-  const input =
-    document.getElementById(
-      "parent-chat-input"
+window.newScaleEditor =
+  function () {
+
+    const category =
+      document.getElementById(
+        "scale-edit-category"
+      );
+
+
+    const name =
+      document.getElementById(
+        "scale-edit-name"
+      );
+
+
+    const notes =
+      document.getElementById(
+        "scale-edit-notes"
+      );
+
+
+    if (
+      !category ||
+      !name ||
+      !notes
+    ) return;
+
+
+    category.value =
+      "Favorite";
+
+
+    name.value =
+      "";
+
+
+    notes.value =
+      "";
+
+
+    name.focus();
+
+  };
+
+
+/* =========================
+   SAVE SCALE
+========================= */
+
+window.saveScale =
+  async function () {
+
+    const categoryInput =
+      document.getElementById(
+        "scale-edit-category"
+      );
+
+
+    const nameInput =
+      document.getElementById(
+        "scale-edit-name"
+      );
+
+
+    const notesInput =
+      document.getElementById(
+        "scale-edit-notes"
+      );
+
+
+    if (
+      !categoryInput ||
+      !nameInput ||
+      !notesInput
+    ) return;
+
+
+    const category =
+      categoryInput.value.trim();
+
+
+    const name =
+      nameInput.value.trim();
+
+
+    const notes =
+      notesInput.value
+        .split(
+          /[\s,、]+/
+        )
+        .map(
+          note =>
+            note.trim()
+        )
+        .filter(
+          Boolean
+        );
+
+
+    if (
+      !category ||
+      !name ||
+      notes.length === 0
+    ) {
+
+      alert(
+        "カテゴリー、スケール名、構成音をすべて入力してください。"
+      );
+
+      return;
+
+    }
+
+
+    const scaleId =
+      push(
+        ref(
+          db,
+          "yaryu/scales"
+        )
+      ).key;
+
+
+    await set(
+      ref(
+        db,
+        `yaryu/scales/${scaleId}`
+      ),
+      {
+
+        category,
+
+        name,
+
+        notes,
+
+        timestamp:
+          Date.now()
+
+      }
     );
 
 
-  if (!input) return;
+    alert(
+      `「${name}」を保存しました。`
+    );
 
 
-  const message =
-    input.value.trim();
+    renderScaleEditor();
+
+    renderScaleSelector();
+
+  };
 
 
-  if (!message) return;
+/* =========================
+   DELETE SCALE
+========================= */
+
+window.deleteScale =
+  async function () {
+
+    const select =
+      document.getElementById(
+        "scale-edit-select"
+      );
 
 
-  const messageRef =
-    push(
+    if (
+      !select ||
+      !select.value
+    ) return;
+
+
+    const [
+      category,
+      ...nameParts
+    ] =
+      select.value.split("::");
+
+
+    const name =
+      nameParts.join("::");
+
+
+    const match =
+      Object.entries(
+        savedScales
+      )
+      .find(
+        ([id, scale]) =>
+
+          scale.category ===
+            category &&
+
+          scale.name ===
+            name
+      );
+
+
+    if (!match) {
+
+      alert(
+        "標準スケールは削除できません。"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !confirm(
+        `「${name}」を削除しますか？`
+      )
+    ) return;
+
+
+    await remove(
       ref(
         db,
-        "yaryu/chat"
+        `yaryu/scales/${match[0]}`
       )
     );
 
-
-  await set(
-    messageRef,
-    {
-
-      sender:
-        "親",
-
-      target:
-        "ALL",
-
-      text:
-        message,
-
-      timestamp:
-        Date.now()
-
-    }
-  );
+  };
 
 
-  input.value =
-    "";
+/* =========================
+   PARENT CHAT
+========================= */
 
-};
+window.sendParentChat =
+  async function () {
 
-// =========================
-// CHAT RESET
-// =========================
+    const input =
+      document.getElementById(
+        "parent-chat-input"
+      );
+
+
+    if (!input) return;
+
+
+    const message =
+      input.value.trim();
+
+
+    if (!message) return;
+
+
+    const messageRef =
+      push(
+        ref(
+          db,
+          "yaryu/chat"
+        )
+      );
+
+
+    await set(
+      messageRef,
+      {
+
+        sender:
+          "親",
+
+        target:
+          "ALL",
+
+        text:
+          message,
+
+        timestamp:
+          Date.now()
+
+      }
+    );
+
+
+    input.value =
+      "";
+
+  };
+
+
+/* =========================
+   RESET CHAT
+========================= */
 
 function resetChat() {
 
-  const confirmed =
-    confirm(
+  if (
+    !confirm(
       "チャットと指示の履歴をすべて削除しますか？"
-    );
+    )
+  ) return;
 
-  if (!confirmed) {
-    return;
-  }
-
-  const chatRef =
-    ref(db, "yaryu/chat");
-
-  const instructionRef =
-    ref(db, "yaryu/instructions");
 
   Promise.all([
-    remove(chatRef),
-    remove(instructionRef)
-  ])
-    .then(() => {
 
-      console.log(
-        "チャットと指示をリセットしました"
-      );
-
-    })
-    .catch((error) => {
-
-      console.error(
-        "リセットに失敗しました:",
-        error
-      );
-
-      alert(
-        "リセットに失敗しました"
-      );
-
-    });
-
-}
-
-// =====================================================
-// CHILD CHAT
-// =====================================================
-
-window.sendChildChat =
-async function () {
-
-  if (!childPlayer) {
-
-    alert(
-      "先に自分の演奏者を選択してください"
-    );
-
-    return;
-
-  }
-
-
-  const input =
-    document.getElementById(
-      "child-chat-input"
-    );
-
-
-  if (!input) return;
-
-
-  const message =
-    input.value.trim();
-
-
-  if (!message) return;
-
-
-  const player =
-    players[childPlayer];
-
-
-  const messageRef =
-    push(
+    remove(
       ref(
         db,
         "yaryu/chat"
       )
+    ),
+
+    remove(
+      ref(
+        db,
+        "yaryu/instructions"
+      )
+    )
+
+  ])
+
+    .then(
+      () =>
+        console.log(
+          "チャットと指示をリセットしました"
+        )
+    )
+
+    .catch(
+      error => {
+
+        console.error(
+          error
+        );
+
+        alert(
+          "リセットに失敗しました"
+        );
+
+      }
     );
-
-
-  await set(
-    messageRef,
-    {
-
-      sender:
-        player.instrument,
-
-      senderPlayer:
-        childPlayer,
-
-      target:
-        "ALL",
-
-      text:
-        message,
-
-      timestamp:
-        Date.now()
-
-    }
-  );
-
-
-  input.value =
-    "";
-
-};
-
-
-// =====================================================
-// TIME FORMAT
-// =====================================================
-
-function formatTime(timestamp) {
-
-  if (!timestamp)
-    return "";
-
-
-  const date =
-    new Date(timestamp);
-
-
-  return date.toLocaleTimeString(
-    "ja-JP",
-    {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    }
-  );
 
 }
 
 
-// =====================================================
-// PARENT CHAT / TIMELINE
-// =====================================================
+window.resetChat =
+  resetChat;
+
+
+/* =========================
+   CHILD CHAT
+========================= */
+
+window.sendChildChat =
+  async function () {
+
+    if (!childPlayer) {
+
+      alert(
+        "先に自分の演奏者を選択してください"
+      );
+
+      return;
+
+    }
+
+
+    const input =
+      document.getElementById(
+        "child-chat-input"
+      );
+
+
+    if (!input) return;
+
+
+    const message =
+      input.value.trim();
+
+
+    if (!message) return;
+
+
+    const player =
+      players[childPlayer];
+
+
+    const messageRef =
+      push(
+        ref(
+          db,
+          "yaryu/chat"
+        )
+      );
+
+
+    await set(
+      messageRef,
+      {
+
+        sender:
+          player.instrument,
+
+        senderPlayer:
+          childPlayer,
+
+        target:
+          "ALL",
+
+        text:
+          message,
+
+        timestamp:
+          Date.now()
+
+      }
+    );
+
+
+    input.value =
+      "";
+
+  };
+
+
+/* =========================
+   TIME
+========================= */
+
+function formatTime(timestamp) {
+
+  if (!timestamp) return "";
+
+
+  return new Date(
+    timestamp
+  )
+    .toLocaleTimeString(
+      "ja-JP",
+      {
+
+        hour:
+          "2-digit",
+
+        minute:
+          "2-digit",
+
+        second:
+          "2-digit"
+
+      }
+    );
+
+}
+
+
+/* =========================
+   PARENT CHAT
+========================= */
 
 function renderChat() {
 
@@ -1723,10 +2280,6 @@ function renderChat() {
 
 
   if (!container) return;
-
-
-  container.innerHTML =
-    "";
 
 
   const chatRef =
@@ -1743,12 +2296,9 @@ function renderChat() {
     );
 
 
-  let chatData =
-    {};
+  let chatData = {};
 
-
-  let instructionData =
-    {};
+  let instructionData = {};
 
 
   function renderTimeline() {
@@ -1756,55 +2306,60 @@ function renderChat() {
     const timeline = [];
 
 
-    Object.values(chatData)
-      .forEach(message => {
+    Object.values(
+      chatData
+    )
+      .forEach(
+        message => {
 
-        timeline.push({
+          timeline.push({
 
-          type:
-            "chat",
+            type:
+              "chat",
 
-          timestamp:
-            message.timestamp,
+            timestamp:
+              message.timestamp,
 
-          sender:
-            message.sender,
+            sender:
+              message.sender,
 
-          target:
-            message.target,
+            text:
+              message.text
 
-          text:
-            message.text
+          });
 
-        });
-
-      });
+        }
+      );
 
 
-    Object.values(instructionData)
-      .forEach(item => {
+    Object.values(
+      instructionData
+    )
+      .forEach(
+        item => {
 
-        timeline.push({
+          timeline.push({
 
-          type:
-            "instruction",
+            type:
+              "instruction",
 
-          timestamp:
-            item.timestamp,
+            timestamp:
+              item.timestamp,
 
-          target:
-            item.target,
+            target:
+              item.target,
 
-          text:
-            item.instruction
+            text:
+              item.instruction
 
-        });
+          });
 
-      });
+        }
+      );
 
 
     timeline.sort(
-      (a, b) =>
+      (a,b) =>
         a.timestamp -
         b.timestamp
     );
@@ -1814,58 +2369,67 @@ function renderChat() {
       "";
 
 
-    timeline.forEach(item => {
+    timeline.forEach(
+      item => {
 
-      const div =
-        document.createElement(
-          "div"
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "chat-message";
+
+
+        const time =
+          formatTime(
+            item.timestamp
+          );
+
+
+        if (
+          item.type ===
+          "instruction"
+        ) {
+
+          const target =
+            item.target ===
+              "ALL"
+
+              ? "全体"
+
+              : (
+                  players[
+                    item.target
+                  ]
+                    ? players[
+                        item.target
+                      ].name
+
+                    : item.target
+                );
+
+
+          div.textContent =
+            `[${time}] 指示 → ${target}: ${item.text}`;
+
+        }
+
+        else {
+
+          div.textContent =
+            `[${time}] ${item.sender}: ${item.text}`;
+
+        }
+
+
+        container.appendChild(
+          div
         );
-
-
-      div.className =
-        "chat-message";
-
-
-      const time =
-        formatTime(
-          item.timestamp
-        );
-
-
-      if (
-        item.type ===
-        "instruction"
-      ) {
-
-        const target =
-          item.target ===
-          "ALL"
-
-            ? "全体"
-
-            : (
-              players[item.target]
-                ? players[item.target].name
-                : item.target
-            );
-
-
-        div.textContent =
-          `[${time}] 指示 → ${target}: ${item.text}`;
-
-      } else {
-
-        div.textContent =
-          `[${time}] ${item.sender}: ${item.text}`;
 
       }
-
-
-      container.appendChild(
-        div
-      );
-
-    });
+    );
 
 
     container.scrollTop =
@@ -1879,7 +2443,8 @@ function renderChat() {
     snapshot => {
 
       chatData =
-        snapshot.val() || {};
+        snapshot.val() ||
+        {};
 
       renderTimeline();
 
@@ -1892,7 +2457,8 @@ function renderChat() {
     snapshot => {
 
       instructionData =
-        snapshot.val() || {};
+        snapshot.val() ||
+        {};
 
       renderTimeline();
 
@@ -1902,14 +2468,9 @@ function renderChat() {
 }
 
 
-// =====================================================
-// CHILD CHAT
-//
-// 自分への指示
-// 全体への指示
-// チャット
-// を表示
-// =====================================================
+/* =========================
+   CHILD CHAT
+========================= */
 
 function renderChildChat() {
 
@@ -1946,12 +2507,9 @@ function renderChildChat() {
     );
 
 
-  let chatData =
-    {};
+  let chatData = {};
 
-
-  let instructionData =
-    {};
+  let instructionData = {};
 
 
   function renderTimeline() {
@@ -1962,60 +2520,67 @@ function renderChildChat() {
     Object.values(
       instructionData
     )
-      .forEach(item => {
+      .forEach(
+        item => {
 
-        if (
-          item.target ===
-            "ALL" ||
-          item.target ===
-            childPlayer
-        ) {
+          if (
+            item.target ===
+              "ALL" ||
+
+            item.target ===
+              childPlayer
+          ) {
+
+            timeline.push({
+
+              type:
+                "instruction",
+
+              timestamp:
+                item.timestamp,
+
+              target:
+                item.target,
+
+              text:
+                item.instruction
+
+            });
+
+          }
+
+        }
+      );
+
+
+    Object.values(
+      chatData
+    )
+      .forEach(
+        message => {
 
           timeline.push({
 
             type:
-              "instruction",
+              "chat",
 
             timestamp:
-              item.timestamp,
+              message.timestamp,
 
-            target:
-              item.target,
+            sender:
+              message.sender,
 
             text:
-              item.instruction
+              message.text
 
           });
 
         }
-
-      });
-
-
-    Object.values(chatData)
-      .forEach(message => {
-
-        timeline.push({
-
-          type:
-            "chat",
-
-          timestamp:
-            message.timestamp,
-
-          sender:
-            message.sender,
-
-          text:
-            message.text
-
-        });
-
-      });
+      );
 
 
     timeline.sort(
-      (a, b) =>
+      (a,b) =>
         a.timestamp -
         b.timestamp
     );
@@ -2025,54 +2590,58 @@ function renderChildChat() {
       "";
 
 
-    timeline.forEach(item => {
+    timeline.forEach(
+      item => {
 
-      const div =
-        document.createElement(
-          "div"
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "chat-message";
+
+
+        const time =
+          formatTime(
+            item.timestamp
+          );
+
+
+        if (
+          item.type ===
+          "instruction"
+        ) {
+
+          const label =
+            item.target ===
+              "ALL"
+
+              ? "全体指示"
+
+              : "自分への指示";
+
+
+          div.textContent =
+            `[${time}] ${label}: ${item.text}`;
+
+        }
+
+        else {
+
+          div.textContent =
+            `[${time}] ${item.sender}: ${item.text}`;
+
+        }
+
+
+        container.appendChild(
+          div
         );
-
-
-      div.className =
-        "chat-message";
-
-
-      const time =
-        formatTime(
-          item.timestamp
-        );
-
-
-      if (
-        item.type ===
-        "instruction"
-      ) {
-
-        const label =
-          item.target ===
-          "ALL"
-
-            ? "全体指示"
-
-            : "自分への指示";
-
-
-        div.textContent =
-          `[${time}] ${label}: ${item.text}`;
-
-      } else {
-
-        div.textContent =
-          `[${time}] ${item.sender}: ${item.text}`;
 
       }
-
-
-      container.appendChild(
-        div
-      );
-
-    });
+    );
 
 
     container.scrollTop =
@@ -2086,7 +2655,8 @@ function renderChildChat() {
     snapshot => {
 
       chatData =
-        snapshot.val() || {};
+        snapshot.val() ||
+        {};
 
       renderTimeline();
 
@@ -2099,7 +2669,8 @@ function renderChildChat() {
     snapshot => {
 
       instructionData =
-        snapshot.val() || {};
+        snapshot.val() ||
+        {};
 
       renderTimeline();
 
@@ -2108,9 +2679,10 @@ function renderChildChat() {
 
 }
 
-// =====================================================
-// FIREBASE SCALE LISTENER
-// =====================================================
+
+/* =========================
+   FIREBASE LISTENERS
+========================= */
 
 onValue(
   ref(
@@ -2140,25 +2712,38 @@ onValue(
 );
 
 
-// =====================================================
-// INITIALIZE
-// =====================================================
+onValue(
+  ref(
+    db,
+    "yaryu/currentScore"
+  ),
+  snapshot => {
+
+    const data =
+      snapshot.val();
+
+
+    if (!data) return;
+
+
+    currentScore =
+      data;
+
+
+    renderCurrentScore();
+
+    renderChildScore();
+
+  }
+);
+
+
+/* =========================
+   START
+========================= */
 
 showScreen(
   "role-screen"
 );
 
-
 initializeDatabase();
-
-
-// =====================================================
-// GLOBAL FUNCTIONS
-// =====================================================
-
-// app.js は type="module" なので、
-// HTML の onclick="resetChat()" から呼ぶには
-// window に明示的に登録する必要がある。
-
-window.resetChat =
-  resetChat;
